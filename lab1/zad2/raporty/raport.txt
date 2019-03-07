@@ -3,12 +3,10 @@ Testu będziemy dokonowyać dla następującej ilości plików w:
       - 25 tysięcy (/usr/src/)
       - 70 tysięcy (/usr/)
 
-
 Dla każdej wielkości dokonujemy pomiaru czasu:
     - operacji wyszukiwania wszystkich plików \\* i zapisu do pliku tymczasowego
     - operacji przeniesienia z pliku tymczasowego do pamięcie
     - operacji zwolnienia bloku pamięci
-
 
 Wyniki dla 13 tysięcy plików(/usr/lib/):
 
