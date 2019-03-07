@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <unistd.h>
 #include <sys/times.h>
 
 // Defines
@@ -59,23 +60,25 @@ void measureTimes(tms *tms_struct, timespec *timespec_struct){
 void printTimes(const char* operation_name, tms *tms_start_time, timespec *ts_start_time){
   measureTimes(tms_operation_end, ts_operation_end);
 
-  long realTime = ts_operation_end->tv_sec - ts_start_time->tv_sec; //real time in secound
+  long realTime_nano = ts_operation_end->tv_nsec - ts_start_time->tv_nsec; //real time in second
+  double realTime = (double)realTime_nano/1000000000.0;
+
 
   clock_t userTime_clocks = tms_operation_end->tms_cutime - tms_start_time->tms_cutime;
   userTime_clocks += tms_operation_end->tms_utime - tms_start_time->tms_utime;
-  double userTime = userTime_clocks/(CLOCKS_PER_SEC/1000.0);
+  double userTime = (double) userTime_clocks/(sysconf(_SC_CLK_TCK));
 
   clock_t systemTime_clocks = tms_operation_end->tms_cstime - tms_start_time->tms_cstime;
   systemTime_clocks += tms_operation_end->tms_stime - tms_start_time->tms_stime;
-  double systemTime = systemTime_clocks/(CLOCKS_PER_SEC/1000.0);
+  double systemTime = (double) systemTime_clocks/(sysconf(_SC_CLK_TCK));
 
-  printf("%20s %20lus %20.3fms %20.3fms\n",
+  printf("%20s %20lfs %20lfs %20lfs\n",
          operation_name,
          realTime,
          userTime,
          systemTime);
   fprintf(report_file,
-         "%20s %20lus %20.3fms %20.3fms\n",
+         "%20s %20lfs %20lfs %20lfs\n",
          operation_name,
          realTime,
          userTime,

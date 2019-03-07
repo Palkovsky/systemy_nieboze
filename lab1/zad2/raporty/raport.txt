@@ -1,76 +1,70 @@
 Testu będziemy dokonowyać dla następującej ilości plików w:
-      - 5 tysięcy
-      - 13 tysięcy
-      - 20 tysięcy
+      - 13 tysięcy (/usr/lib)
+      - 25 tysięcy (/usr/src/)
+      - 70 tysięcy (/usr/)
 
-Maksymalna głębość testowych drzew katalogów wynosi około 16, ale wartości w drzewie są rozmieszczone równomiernie.
 
 Dla każdej wielkości dokonujemy pomiaru czasu:
     - operacji wyszukiwania wszystkich plików \\* i zapisu do pliku tymczasowego
     - operacji przeniesienia z pliku tymczasowego do pamięcie
     - operacji zwolnienia bloku pamięci
 
-Komenda używana do testowania:
-- ./main.out 10 search_directory ~/host/FIND_TEST/ \\* file.temp move_to_mem remove_block 0
 
-Uwaga:
-  Do testów używałem katalogu na maszynie hosta. Z tego co zauważyłem przy przeszukiwaniu maszyny hosta czas użytkownika zawsze wynosi zero. Przy przeszukiwaniu katalogów guesta czas użytkownika jest wyższy.
-
-Wyniki dla 5 tysięcy plików:
+Wyniki dla 13 tysięcy plików(/usr/lib/):
 
            Operation                  Real                 User               System
-               START                    0s                0.000ms                0.000ms
-    search_directory                    4s                0.000ms                0.084ms
-         move_to_mem                    0s                0.000ms                0.001ms
-        remove_block                    0s                0.000ms                0.000ms
-             OVERALL                    4s                0.000ms                0.085ms
+               START             0.000410s             0.000000s             0.000000s
+    search_directory             0.033578s             0.010000s             0.010000s
+         move_to_mem             0.002499s             0.000000s             0.000000s
+        remove_block             0.000003s             0.000000s             0.000000s
+             OVERALL             0.037550s             0.010000s             0.010000s
 
-Cała procedura zajęła 4 sekuny. Najwięcej czasu zostało spędzone w stanie search_directory, czyli na wykonywaniu polecenia 'find'.
+Cała procedura zajęła około 37 milisekund. Najwięcej czasu zostało spędzone w stanie search_directory, czyli na wykonywaniu polecenia 'find' i zapisywaniu pliku tymczasowego.
 
-Czas rzeczywisty jest znacznie wyższy od czasów użytkownika i systemu z tego powodu, że program find przez większość czasu czeka na odczyt danych z dysku.
+Czas rzeczywisty jest wyższy od czasów użytkownika i systemu z tego powodu, że program find przez większość czasu czeka na odczyt danych z dysku.
 
-Czas systemowy jest wyższy od czasu użytkownika, ponieważ wszystkie operacje I/O muszą się odbywać w trybie jądra.
-
-Przenoszenie pliku tymczasowego do pamięci operacyjnej jest również operacją I/O z tego powodu w wierszu 'move_to_mem' czas systemowy jest większy od czasu użytkownika.
+move_to_mem pokazuje 0 w trybie użytkownika i jądra dlatego, że ładowany plik był bardzo mały, więc procedura działa bardzo szybko.
 
 Usuwanie polega jedynie na wywołaniu free() i przypisaniu jednemu wskaźnikowi wartości NULL. Niezależnie od wielkości zwalnianego bloku operacja ta będzie szybka.
 
-Dla większych danych spodziewam się tylko uwydatnienia powyższych obserwacji:
-
-Wyniki dla 13 tysięcy plików:
-
+Wyniki dla 25 tysięcy plików(/usr/src/):
            Operation                  Real                 User               System
-               START                    0s                0.000ms                0.000ms
-    search_directory                    8s                0.000ms                0.200ms
-         move_to_mem                    0s                0.000ms                0.003ms
-        remove_block                    0s                0.000ms                0.000ms
-             OVERALL                    8s                0.000ms                0.203ms
+               START             0.000388s             0.000000s             0.000000s
+    search_directory             0.113951s             0.000000s             0.080000s
+         move_to_mem             0.044881s             0.000000s             0.030000s
+        remove_block             0.000103s             0.000000s             0.000000s
+             OVERALL             0.160464s             0.000000s             0.110000s
 
-Wyniki dla 20 tysięcy plików i z dodanym spinlockiem w move_to_mem:
+Tutaj możemy zaobserwować wydłużenie czasu systemowego względem czasu użytkownika w fazie search_directory. Wynika to z tego, że polecenie find przez znaczną część swojego działania wykonuje operacje IO. Z tego powodu musi czekać.
 
+Można też zeuważyć zwiększczenie czasu systemowego w fazie move_to_mem, wynika to z tego że wykonujemy operację czytania bajt po bajcie pliku tymczasowego.
+
+Wyniki dla około 70 tysięcy plików(/usr/):
            Operation                  Real                 User               System
-               START                    0s                0.000ms                0.000ms
-    search_directory                   15s                0.000ms                0.336ms
-         move_to_mem                    3s                0.226ms                0.003ms
-        remove_block                    0s                0.000ms                0.000ms
-             OVERALL                   18s                0.226ms                0.339ms
-
-Po dodaniu spinlocka można zaoobserwować wzrost czasu użytkownika. Jednak czas rzeczywisty wciąż nie jest równy czasowi użytkownika i systemu. Wynika to z tego, że użycie procesora jest bliskie 100% i proces musi czekać na swoją kolej po wyczerpaniu kwantu czasu.
+               START             0.000367s             0.000000s             0.000000s
+    search_directory             0.229972s             0.000000s             0.180000s
+         move_to_mem             0.096326s             0.000000s             0.060000s
+        remove_block             0.000237s             0.000000s             0.000000s
+             OVERALL             0.328086s             0.000000s             0.240000s
 
 Dla sekwencji różnych operacji:
 
            Operation                  Real                 User               System
-               START                    0s                0.000ms                0.000ms
-    search_directory                    0s                0.000ms                0.000ms
-         move_to_mem                    0s                0.000ms                0.000ms
-    search_directory                    0s                0.003ms                0.010ms
-         move_to_mem                    0s                0.000ms                0.000ms
-    search_directory                    0s                0.005ms                0.010ms
-        remove_block                    0s                0.000ms                0.000ms
-         move_to_mem                    0s                0.000ms                0.000ms
-    search_directory                    0s                0.000ms                0.001ms
-        remove_block                    0s                0.000ms                0.000ms
-        remove_block                    0s                0.000ms                0.000ms
-    search_directory                    1s                0.003ms                0.010ms
-         move_to_mem                    0s                0.000ms                0.000ms
-             OVERALL                    1s                0.011ms                0.031ms
+               START             0.000306s             0.000000s             0.000000s
+    search_directory             0.004824s             0.000000s             0.000000s
+         move_to_mem             0.000650s             0.000000s             0.000000s
+    search_directory             0.143336s             0.050000s             0.080000s
+         move_to_mem             0.000690s             0.000000s             0.000000s
+    search_directory             0.154122s             0.060000s             0.090000s
+        remove_block             0.000010s             0.000000s             0.000000s
+         move_to_mem             0.001850s             0.000000s             0.000000s
+    search_directory             0.026229s             0.010000s             0.010000s
+        remove_block             0.000004s             0.000000s             0.000000s
+        remove_block             0.000001s             0.000000s             0.000000s
+    search_directory             0.150076s             0.050000s             0.090000s
+         move_to_mem             0.000685s             0.000000s             0.000000s
+             OVERALL             0.486549s             0.170000s             0.270000s
+
+Dla sekwencji wielu operacji spostrzeżenia się utrzymują. Widać tutaj, że nie ładujemy zbyt dużych plików do pamięci dlatego czas systemowy i użytkownika w move_to_mem jest niski.
+
+Można zauważyć że czas użytkownika dla niektórych przypadków wzrósł. Wynika to z zastosowania pewnych wyrażeń regularnych w argumecie find'a. Nie ma sensu żeby łańcuchy znaków były matchowane w trybie jądra.
