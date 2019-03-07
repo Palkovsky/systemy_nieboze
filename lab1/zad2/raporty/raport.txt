@@ -1,0 +1,76 @@
+Testu będziemy dokonowyać dla następującej ilości plików w:
+      - 5 tysięcy
+      - 13 tysięcy
+      - 20 tysięcy
+
+Maksymalna głębość testowych drzew katalogów wynosi około 16, ale wartości w drzewie są rozmieszczone równomiernie.
+
+Dla każdej wielkości dokonujemy pomiaru czasu:
+    - operacji wyszukiwania wszystkich plików \\* i zapisu do pliku tymczasowego
+    - operacji przeniesienia z pliku tymczasowego do pamięcie
+    - operacji zwolnienia bloku pamięci
+
+Komenda używana do testowania:
+- ./main.out 10 search_directory ~/host/FIND_TEST/ \\* file.temp move_to_mem remove_block 0
+
+Uwaga:
+  Do testów używałem katalogu na maszynie hosta. Z tego co zauważyłem przy przeszukiwaniu maszyny hosta czas użytkownika zawsze wynosi zero. Przy przeszukiwaniu katalogów guesta czas użytkownika jest wyższy.
+
+Wyniki dla 5 tysięcy plików:
+
+           Operation                  Real                 User               System
+               START                    0s                0.000ms                0.000ms
+    search_directory                    4s                0.000ms                0.084ms
+         move_to_mem                    0s                0.000ms                0.001ms
+        remove_block                    0s                0.000ms                0.000ms
+             OVERALL                    4s                0.000ms                0.085ms
+
+Cała procedura zajęła 4 sekuny. Najwięcej czasu zostało spędzone w stanie search_directory, czyli na wykonywaniu polecenia 'find'.
+
+Czas rzeczywisty jest znacznie wyższy od czasów użytkownika i systemu z tego powodu, że program find przez większość czasu czeka na odczyt danych z dysku.
+
+Czas systemowy jest wyższy od czasu użytkownika, ponieważ wszystkie operacje I/O muszą się odbywać w trybie jądra.
+
+Przenoszenie pliku tymczasowego do pamięci operacyjnej jest również operacją I/O z tego powodu w wierszu 'move_to_mem' czas systemowy jest większy od czasu użytkownika.
+
+Usuwanie polega jedynie na wywołaniu free() i przypisaniu jednemu wskaźnikowi wartości NULL. Niezależnie od wielkości zwalnianego bloku operacja ta będzie szybka.
+
+Dla większych danych spodziewam się tylko uwydatnienia powyższych obserwacji:
+
+Wyniki dla 13 tysięcy plików:
+
+           Operation                  Real                 User               System
+               START                    0s                0.000ms                0.000ms
+    search_directory                    8s                0.000ms                0.200ms
+         move_to_mem                    0s                0.000ms                0.003ms
+        remove_block                    0s                0.000ms                0.000ms
+             OVERALL                    8s                0.000ms                0.203ms
+
+Wyniki dla 20 tysięcy plików i z dodanym spinlockiem w move_to_mem:
+
+           Operation                  Real                 User               System
+               START                    0s                0.000ms                0.000ms
+    search_directory                   15s                0.000ms                0.336ms
+         move_to_mem                    3s                0.226ms                0.003ms
+        remove_block                    0s                0.000ms                0.000ms
+             OVERALL                   18s                0.226ms                0.339ms
+
+Po dodaniu spinlocka można zaoobserwować wzrost czasu użytkownika. Jednak czas rzeczywisty wciąż nie jest równy czasowi użytkownika i systemu. Wynika to z tego, że użycie procesora jest bliskie 100% i proces musi czekać na swoją kolej po wyczerpaniu kwantu czasu.
+
+Dla sekwencji różnych operacji:
+
+           Operation                  Real                 User               System
+               START                    0s                0.000ms                0.000ms
+    search_directory                    0s                0.000ms                0.000ms
+         move_to_mem                    0s                0.000ms                0.000ms
+    search_directory                    0s                0.003ms                0.010ms
+         move_to_mem                    0s                0.000ms                0.000ms
+    search_directory                    0s                0.005ms                0.010ms
+        remove_block                    0s                0.000ms                0.000ms
+         move_to_mem                    0s                0.000ms                0.000ms
+    search_directory                    0s                0.000ms                0.001ms
+        remove_block                    0s                0.000ms                0.000ms
+        remove_block                    0s                0.000ms                0.000ms
+    search_directory                    1s                0.003ms                0.010ms
+         move_to_mem                    0s                0.000ms                0.000ms
+             OVERALL                    1s                0.011ms                0.031ms
