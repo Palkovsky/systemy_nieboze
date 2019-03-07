@@ -3,12 +3,10 @@ Testu będziemy dokonowyać dla następującej ilości plików w:
       - 25 tysięcy (/usr/src/)
       - 70 tysięcy (/usr/)
 
-
 Dla każdej wielkości dokonujemy pomiaru czasu:
     - operacji wyszukiwania wszystkich plików \\* i zapisu do pliku tymczasowego
     - operacji przeniesienia z pliku tymczasowego do pamięcie
     - operacji zwolnienia bloku pamięci
-
 
 Wyniki dla 13 tysięcy plików(/usr/lib/):
 
@@ -28,6 +26,7 @@ move_to_mem pokazuje 0 w trybie użytkownika i jądra dlatego, że ładowany pli
 Usuwanie polega jedynie na wywołaniu free() i przypisaniu jednemu wskaźnikowi wartości NULL. Niezależnie od wielkości zwalnianego bloku operacja ta będzie szybka.
 
 Wyniki dla 25 tysięcy plików(/usr/src/):
+
            Operation                  Real                 User               System
                START             0.000388s             0.000000s             0.000000s
     search_directory             0.113951s             0.000000s             0.080000s
@@ -40,6 +39,7 @@ Tutaj możemy zaobserwować wydłużenie czasu systemowego względem czasu użyt
 Można też zeuważyć zwiększczenie czasu systemowego w fazie move_to_mem, wynika to z tego że wykonujemy operację czytania bajt po bajcie pliku tymczasowego.
 
 Wyniki dla około 70 tysięcy plików(/usr/):
+
            Operation                  Real                 User               System
                START             0.000367s             0.000000s             0.000000s
     search_directory             0.229972s             0.000000s             0.180000s
