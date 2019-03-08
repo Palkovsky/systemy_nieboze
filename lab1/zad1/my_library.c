@@ -37,7 +37,8 @@ int8_t mylib_PerformFind(){
   uint32_t command_length;
   char *command_buffer;
 
-  command_length = strlen(lookup_dir) + strlen(lookup_filter) + 50;
+  if(temp_filename == NULL) temp_filename = DEFAULT_TEMP_FILE_PATH;
+  command_length = strlen(lookup_dir) + strlen(lookup_filter) + strlen(temp_filename) +  50;
   command_buffer = calloc(command_length, sizeof(char));
   sprintf(command_buffer, "find %s -name %s > %s", lookup_dir, lookup_filter, temp_filename);
 

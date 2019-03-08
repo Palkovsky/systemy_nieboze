@@ -22,7 +22,7 @@ $(LIB_NAME).o: $(LIB_NAME).c $(LIB_NAME).h
 
 # Remove all object files, static libraries and shared libraries
 clean:
-	rm -f *.o *.a *.so.* *.temp
+	rm -f *.o *.a *.so.* *.temp *.out
 
 test_simple_70k: all
 	./main.out 10 \
