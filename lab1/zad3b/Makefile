@@ -4,7 +4,7 @@
 # $< ==> lib.c
 # $^ ==> lib.c main.c
 
-CC = gcc -Wall -std=gnu11
+CC = gcc -Wall -std=gnu11 $(OPT)
 
 
 NAME = main
@@ -12,16 +12,64 @@ LIB_NAME = my_library
 LIB_SONAME = lib$(LIB_NAME).so
 
 all:
-	echo "============ STATIC ============\n" > raport.txt
-	make static
+	echo "============ STATIC -O0 ============\n" > raport.txt
+	make static OPT=-O0
 	make all_tests >> raport.txt
 
-	echo "\n============ SHARED ============\n" >> raport.txt
-	make shared
+	echo "\n============ STATIC -O1 ============\n" >> raport.txt
+	make static OPT=-O1
 	make all_tests >> raport.txt
 
-	echo "\n============ DYNAMIC ============\n" >> raport.txt
-	make dynamic
+	echo "\n============ STATIC -O2 ============\n" >> raport.txt
+	make static OPT=-O2
+	make all_tests >> raport.txt
+
+	echo "\n============ STATIC -O3 ============\n" >> raport.txt
+	make static OPT=-O3
+	make all_tests >> raport.txt
+
+	echo "\n============ STATIC -Os ============\n" >> raport.txt
+	make static OPT=-Os
+	make all_tests >> raport.txt
+
+	echo "\n============ SHARED -O0 ============\n" >> raport.txt
+	make shared OPT=-O0
+	make all_tests >> raport.txt
+
+	echo "\n============ SHARED -O1 ============\n" >> raport.txt
+	make shared OPT=-O1
+	make all_tests >> raport.txt
+
+	echo "\n============ SHARED -O2 ============\n" >> raport.txt
+	make shared OPT=-O2
+	make all_tests >> raport.txt
+
+	echo "\n============ SHARED -O3 ============\n" >> raport.txt
+	make shared OPT=-O3
+	make all_tests >> raport.txt
+
+	echo "\n============ SHARED -Os ============\n" >> raport.txt
+	make shared OPT=-Os
+	make all_tests >> raport.txt
+
+	echo "\n============ DYNAMIC -O0 ============\n" >> raport.txt
+	make dynamic OPT=-O0
+	make all_tests >> raport.txt
+
+	echo "\n============ DYNAMIC -O1 ============\n" >> raport.txt
+	make dynamic OPT=-O1
+	make all_tests >> raport.txt
+
+	echo "\n============ DYNAMIC -O2 ============\n" >> raport.txt
+	make dynamic OPT=-O2
+	make all_tests >> raport.txt
+
+	echo "\n============ DYNAMIC -O3 ============\n" >> raport.txt
+	make dynamic OPT=-O3
+	make all_tests >> raport.txt
+
+	echo "\n============ DYNAMIC -Os ============\n" >> raport.txt
+	make dynamic OPT=-Os
 	make all_tests >> raport.txt
 
 	make clean
@@ -32,9 +80,11 @@ static:
 	ar rcs lib$(LIB_NAME).a $(LIB_NAME).o
 
 # compiling main.c
-	$(CC) -c -o $(NAME).o $(NAME).c -D REPORT_FILENAME=\"/dev/null\"
+	$(CC)  -c -o $(NAME).o $(NAME).c -D REPORT_FILENAME=\"/dev/null\"
 
 	$(CC) -o $(NAME).out $(NAME).o lib$(LIB_NAME).a
+
+
 
 shared:
 # compiling my_library
@@ -76,13 +126,11 @@ test_simple_25k:
 	move_to_mem \
 	remove_block 0
 
-
 test_simple_13k:
 	./$(NAME).out 10 \
 	search_directory /usr/lib/ \\*.so file.temp \
 	move_to_mem \
 	remove_block 0
-
 
 test_complex:
 	./$(NAME).out 10 \
@@ -98,4 +146,3 @@ test_complex:
 	remove_block 1 \
 	search_directory /usr vim file.temp \
 	move_to_mem
-

@@ -1,3 +1,5 @@
+Różnice w czasie wykonywania są niemal niezauważalne i na ich podstawie nie da się stwierdzić, który sposób jest najszybyszy. Wydawać by się mogło, że biblioteka ładowana dynamiczne będzie wolniejsze od statycznej i współdzielonej, jednak nie udało się w tym eksperymencie tego zaoobserwować. 
+
 DLA STATYCZNEJ:
 
 13k:
@@ -127,6 +129,3 @@ complex:
     search_directory             0.141126s             0.027653s             0.107698s
          move_to_mem             0.000676s             0.000000s             0.000278s
              OVERALL             0.472011s             0.127674s             0.310524s
-
-
-Różnice w czasie wykonywania są niemal niezauważalne i na ich podstawie nie da się stwierdzić, który sposób jest najszybyszy. Wydawać by się mogło, że biblioteka ładowana dynamiczne będzie wolniejsze od statycznej i współdzielonej, jednak nie udało się w tym eksperymencie tego zaoobserwować. 

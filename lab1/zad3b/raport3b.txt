@@ -1,0 +1,946 @@
+Dla testu wielu zachodzących po sobie operacji(complex) można zauważyć, że im większy poziom opytymalizacji tym całkowity czas rzeczywisty wykonywanego programu się zmniejsza. Przy -O0 czas ten wynosi około 0.475s, natomiast przy -O3 lub -Os zwykle zmniejsza się do około 0.468s. W innych testach przyspieszenie nie jest zbyt zauważalne. Wynika to z tego większość czasu pochołania program 'find', na którego flagi kompilacji nie mamy wpływu.
+
+============ STATIC -O0 ============
+
+make[1]: Entering directory `/home/vagrant/host/SysOpy/lab1/zad3b'
+./main.out 10 \
+	search_directory /usr/lib/ \\*.so file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000115s             0.000000s             0.000063s
+    search_directory             0.032828s             0.009676s             0.015388s
+         move_to_mem             0.002332s             0.000000s             0.001500s
+        remove_block             0.000004s             0.000000s             0.000004s
+             OVERALL             0.035315s             0.009676s             0.016994s
+./main.out 10 \
+	search_directory /usr/src/ \\* file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000133s             0.000000s             0.000075s
+    search_directory             0.107347s             0.006134s             0.080839s
+         move_to_mem             0.046133s             0.000000s             0.033535s
+        remove_block             0.000105s             0.000000s             0.000105s
+             OVERALL             0.153757s             0.006134s             0.114596s
+./main.out 10 \
+	search_directory /usr/ \\* file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000095s             0.000000s             0.000056s
+    search_directory             0.224570s             0.005760s             0.179585s
+         move_to_mem             0.102236s             0.000000s             0.075293s
+        remove_block             0.000214s             0.000000s             0.000213s
+             OVERALL             0.327170s             0.005760s             0.255205s
+./main.out 10 \
+	search_directory /bin/ \\* file.temp \
+	move_to_mem \
+	search_directory /usr dif\\* file.temp \
+	move_to_mem \
+	search_directory /usr \\*mac\\* file.temp \
+	remove_block 0 \
+	move_to_mem \
+	search_directory /usr/lib vim file.temp \
+	remove_block 0 \
+	remove_block 1 \
+	search_directory /usr vim file.temp \
+	move_to_mem
+           Operation                  Real                 User               System
+               START             0.000099s             0.000000s             0.000059s
+    search_directory             0.005477s             0.000000s             0.002312s
+         move_to_mem             0.000638s             0.000000s             0.000287s
+    search_directory             0.141940s             0.048005s             0.089133s
+         move_to_mem             0.000685s             0.000000s             0.000294s
+    search_directory             0.152048s             0.054510s             0.086818s
+        remove_block             0.000009s             0.000000s             0.000009s
+         move_to_mem             0.001661s             0.000000s             0.000980s
+    search_directory             0.024582s             0.008357s             0.013771s
+        remove_block             0.000004s             0.000000s             0.000004s
+        remove_block             0.000001s             0.000000s             0.000001s
+    search_directory             0.147297s             0.035047s             0.106291s
+         move_to_mem             0.000765s             0.000000s             0.000324s
+             OVERALL             0.475332s             0.145919s             0.300428s
+make[1]: Leaving directory `/home/vagrant/host/SysOpy/lab1/zad3b'
+
+============ STATIC -O1 ============
+
+make[1]: Entering directory `/home/vagrant/host/SysOpy/lab1/zad3b'
+./main.out 10 \
+	search_directory /usr/lib/ \\*.so file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000115s             0.000000s             0.000060s
+    search_directory             0.032744s             0.004017s             0.021138s
+         move_to_mem             0.002407s             0.000000s             0.001478s
+        remove_block             0.000003s             0.000000s             0.000003s
+             OVERALL             0.035312s             0.004017s             0.022725s
+./main.out 10 \
+	search_directory /usr/src/ \\* file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000097s             0.000000s             0.000057s
+    search_directory             0.109372s             0.000000s             0.088488s
+         move_to_mem             0.046850s             0.000000s             0.033945s
+        remove_block             0.000137s             0.000000s             0.000137s
+             OVERALL             0.156499s             0.000000s             0.122674s
+./main.out 10 \
+	search_directory /usr/ \\* file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000097s             0.000000s             0.000057s
+    search_directory             0.227575s             0.005305s             0.181395s
+         move_to_mem             0.102017s             0.000000s             0.074495s
+        remove_block             0.000214s             0.000000s             0.000214s
+             OVERALL             0.329940s             0.005305s             0.256203s
+./main.out 10 \
+	search_directory /bin/ \\* file.temp \
+	move_to_mem \
+	search_directory /usr dif\\* file.temp \
+	move_to_mem \
+	search_directory /usr \\*mac\\* file.temp \
+	remove_block 0 \
+	move_to_mem \
+	search_directory /usr/lib vim file.temp \
+	remove_block 0 \
+	remove_block 1 \
+	search_directory /usr vim file.temp \
+	move_to_mem
+           Operation                  Real                 User               System
+               START             0.000107s             0.000000s             0.000057s
+    search_directory             0.005240s             0.000000s             0.002175s
+         move_to_mem             0.000593s             0.000000s             0.000279s
+    search_directory             0.140768s             0.027782s             0.108188s
+         move_to_mem             0.000659s             0.000000s             0.000263s
+    search_directory             0.152340s             0.045512s             0.096025s
+        remove_block             0.000023s             0.000000s             0.000024s
+         move_to_mem             0.001766s             0.000000s             0.001052s
+    search_directory             0.024114s             0.008730s             0.013901s
+        remove_block             0.000003s             0.000000s             0.000003s
+        remove_block             0.000001s             0.000000s             0.000001s
+    search_directory             0.141551s             0.047349s             0.087825s
+         move_to_mem             0.000605s             0.000000s             0.000247s
+             OVERALL             0.467912s             0.129373s             0.310198s
+make[1]: Leaving directory `/home/vagrant/host/SysOpy/lab1/zad3b'
+
+============ STATIC -O2 ============
+
+make[1]: Entering directory `/home/vagrant/host/SysOpy/lab1/zad3b'
+./main.out 10 \
+	search_directory /usr/lib/ \\*.so file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000089s             0.000000s             0.000057s
+    search_directory             0.032690s             0.009590s             0.015363s
+         move_to_mem             0.002288s             0.000000s             0.001451s
+        remove_block             0.000002s             0.000000s             0.000002s
+             OVERALL             0.035118s             0.009590s             0.016926s
+./main.out 10 \
+	search_directory /usr/src/ \\* file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000096s             0.000000s             0.000055s
+    search_directory             0.110002s             0.004567s             0.083273s
+         move_to_mem             0.045839s             0.000000s             0.033502s
+        remove_block             0.000094s             0.000000s             0.000094s
+             OVERALL             0.156067s             0.004567s             0.116965s
+./main.out 10 \
+	search_directory /usr/ \\* file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000098s             0.000000s             0.000057s
+    search_directory             0.229666s             0.004751s             0.181567s
+         move_to_mem             0.096063s             0.006039s             0.065666s
+        remove_block             0.000275s             0.000023s             0.000252s
+             OVERALL             0.326141s             0.010814s             0.247584s
+./main.out 10 \
+	search_directory /bin/ \\* file.temp \
+	move_to_mem \
+	search_directory /usr dif\\* file.temp \
+	move_to_mem \
+	search_directory /usr \\*mac\\* file.temp \
+	remove_block 0 \
+	move_to_mem \
+	search_directory /usr/lib vim file.temp \
+	remove_block 0 \
+	remove_block 1 \
+	search_directory /usr vim file.temp \
+	move_to_mem
+           Operation                  Real                 User               System
+               START             0.000097s             0.000000s             0.000057s
+    search_directory             0.005864s             0.000000s             0.002272s
+         move_to_mem             0.000643s             0.000000s             0.000280s
+    search_directory             0.140802s             0.038363s             0.096950s
+         move_to_mem             0.000756s             0.000000s             0.000314s
+    search_directory             0.151445s             0.046595s             0.094327s
+        remove_block             0.000008s             0.000000s             0.000008s
+         move_to_mem             0.001745s             0.000000s             0.000960s
+    search_directory             0.024821s             0.007184s             0.015617s
+        remove_block             0.000019s             0.000000s             0.000020s
+        remove_block             0.000015s             0.000000s             0.000015s
+    search_directory             0.143686s             0.042831s             0.094698s
+         move_to_mem             0.000690s             0.000000s             0.000276s
+             OVERALL             0.470756s             0.134973s             0.305978s
+make[1]: Leaving directory `/home/vagrant/host/SysOpy/lab1/zad3b'
+
+============ STATIC -O3 ============
+
+make[1]: Entering directory `/home/vagrant/host/SysOpy/lab1/zad3b'
+./main.out 10 \
+	search_directory /usr/lib/ \\*.so file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000099s             0.000000s             0.000057s
+    search_directory             0.034226s             0.019873s             0.006046s
+         move_to_mem             0.002367s             0.000000s             0.001469s
+        remove_block             0.000003s             0.000000s             0.000003s
+             OVERALL             0.036735s             0.019873s             0.007618s
+./main.out 10 \
+	search_directory /usr/src/ \\* file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000096s             0.000000s             0.000056s
+    search_directory             0.109076s             0.005072s             0.082176s
+         move_to_mem             0.045806s             0.000000s             0.033468s
+        remove_block             0.000108s             0.000000s             0.000108s
+             OVERALL             0.155125s             0.005072s             0.115850s
+./main.out 10 \
+	search_directory /usr/ \\* file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000098s             0.000000s             0.000057s
+    search_directory             0.228384s             0.019110s             0.166634s
+         move_to_mem             0.101473s             0.000000s             0.074437s
+        remove_block             0.000231s             0.000000s             0.000231s
+             OVERALL             0.330225s             0.019110s             0.241404s
+./main.out 10 \
+	search_directory /bin/ \\* file.temp \
+	move_to_mem \
+	search_directory /usr dif\\* file.temp \
+	move_to_mem \
+	search_directory /usr \\*mac\\* file.temp \
+	remove_block 0 \
+	move_to_mem \
+	search_directory /usr/lib vim file.temp \
+	remove_block 0 \
+	remove_block 1 \
+	search_directory /usr vim file.temp \
+	move_to_mem
+           Operation                  Real                 User               System
+               START             0.000112s             0.000000s             0.000071s
+    search_directory             0.005817s             0.000000s             0.002232s
+         move_to_mem             0.000595s             0.000000s             0.000267s
+    search_directory             0.141878s             0.058006s             0.078379s
+         move_to_mem             0.000714s             0.000000s             0.000296s
+    search_directory             0.151746s             0.034882s             0.105746s
+        remove_block             0.000008s             0.000000s             0.000009s
+         move_to_mem             0.001596s             0.000000s             0.000948s
+    search_directory             0.024125s             0.004202s             0.018029s
+        remove_block             0.000027s             0.000000s             0.000028s
+        remove_block             0.000020s             0.000000s             0.000022s
+    search_directory             0.142343s             0.046604s             0.090574s
+         move_to_mem             0.000728s             0.000000s             0.000246s
+             OVERALL             0.469888s             0.143694s             0.297040s
+make[1]: Leaving directory `/home/vagrant/host/SysOpy/lab1/zad3b'
+
+============ STATIC -Os ============
+
+make[1]: Entering directory `/home/vagrant/host/SysOpy/lab1/zad3b'
+./main.out 10 \
+	search_directory /usr/lib/ \\*.so file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000099s             0.000000s             0.000057s
+    search_directory             0.032444s             0.013911s             0.011491s
+         move_to_mem             0.002257s             0.000000s             0.001465s
+        remove_block             0.000002s             0.000000s             0.000003s
+             OVERALL             0.034838s             0.013911s             0.013053s
+./main.out 10 \
+	search_directory /usr/src/ \\* file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000100s             0.000000s             0.000056s
+    search_directory             0.111843s             0.008080s             0.081833s
+         move_to_mem             0.045418s             0.000000s             0.033208s
+        remove_block             0.000097s             0.000000s             0.000098s
+             OVERALL             0.157494s             0.008080s             0.115235s
+./main.out 10 \
+	search_directory /usr/ \\* file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000096s             0.000000s             0.000056s
+    search_directory             0.229083s             0.010347s             0.176885s
+         move_to_mem             0.093189s             0.000000s             0.069788s
+        remove_block             0.000200s             0.000000s             0.000200s
+             OVERALL             0.322605s             0.010347s             0.246969s
+./main.out 10 \
+	search_directory /bin/ \\* file.temp \
+	move_to_mem \
+	search_directory /usr dif\\* file.temp \
+	move_to_mem \
+	search_directory /usr \\*mac\\* file.temp \
+	remove_block 0 \
+	move_to_mem \
+	search_directory /usr/lib vim file.temp \
+	remove_block 0 \
+	remove_block 1 \
+	search_directory /usr vim file.temp \
+	move_to_mem
+           Operation                  Real                 User               System
+               START             0.000097s             0.000000s             0.000057s
+    search_directory             0.004775s             0.001027s             0.000974s
+         move_to_mem             0.000577s             0.000000s             0.000261s
+    search_directory             0.142081s             0.052002s             0.084978s
+         move_to_mem             0.000705s             0.000000s             0.000292s
+    search_directory             0.150589s             0.042462s             0.097627s
+        remove_block             0.000008s             0.000000s             0.000008s
+         move_to_mem             0.001606s             0.000000s             0.000954s
+    search_directory             0.025018s             0.007371s             0.015938s
+        remove_block             0.000017s             0.000000s             0.000018s
+        remove_block             0.000012s             0.000000s             0.000013s
+    search_directory             0.141806s             0.043579s             0.092290s
+         move_to_mem             0.000705s             0.000000s             0.000288s
+             OVERALL             0.468142s             0.146441s             0.293860s
+make[1]: Leaving directory `/home/vagrant/host/SysOpy/lab1/zad3b'
+
+============ SHARED -O0 ============
+
+make[1]: Entering directory `/home/vagrant/host/SysOpy/lab1/zad3b'
+./main.out 10 \
+	search_directory /usr/lib/ \\*.so file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000108s             0.000000s             0.000069s
+    search_directory             0.033451s             0.007108s             0.018881s
+         move_to_mem             0.002527s             0.000000s             0.001564s
+        remove_block             0.000003s             0.000000s             0.000003s
+             OVERALL             0.036142s             0.007108s             0.020575s
+./main.out 10 \
+	search_directory /usr/src/ \\* file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000094s             0.000000s             0.000055s
+    search_directory             0.109663s             0.000000s             0.087955s
+         move_to_mem             0.047110s             0.005998s             0.028739s
+        remove_block             0.000116s             0.000019s             0.000096s
+             OVERALL             0.157021s             0.006020s             0.116885s
+./main.out 10 \
+	search_directory /usr/ \\* file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000100s             0.000000s             0.000057s
+    search_directory             0.229056s             0.004635s             0.181816s
+         move_to_mem             0.102835s             0.005560s             0.070914s
+        remove_block             0.000239s             0.000017s             0.000222s
+             OVERALL             0.332282s             0.010213s             0.253064s
+./main.out 10 \
+	search_directory /bin/ \\* file.temp \
+	move_to_mem \
+	search_directory /usr dif\\* file.temp \
+	move_to_mem \
+	search_directory /usr \\*mac\\* file.temp \
+	remove_block 0 \
+	move_to_mem \
+	search_directory /usr/lib vim file.temp \
+	remove_block 0 \
+	remove_block 1 \
+	search_directory /usr vim file.temp \
+	move_to_mem
+           Operation                  Real                 User               System
+               START             0.000096s             0.000000s             0.000058s
+    search_directory             0.005672s             0.000000s             0.002337s
+         move_to_mem             0.000659s             0.000000s             0.000292s
+    search_directory             0.143744s             0.050998s             0.087383s
+         move_to_mem             0.000672s             0.000000s             0.000289s
+    search_directory             0.152140s             0.064072s             0.077325s
+        remove_block             0.000011s             0.000000s             0.000010s
+         move_to_mem             0.001886s             0.000000s             0.001011s
+    search_directory             0.024924s             0.003626s             0.019311s
+        remove_block             0.000004s             0.000000s             0.000004s
+        remove_block             0.000005s             0.000000s             0.000005s
+    search_directory             0.147198s             0.053953s             0.088203s
+         move_to_mem             0.000667s             0.000000s             0.000267s
+             OVERALL             0.477794s             0.172649s             0.276641s
+make[1]: Leaving directory `/home/vagrant/host/SysOpy/lab1/zad3b'
+
+============ SHARED -O1 ============
+
+make[1]: Entering directory `/home/vagrant/host/SysOpy/lab1/zad3b'
+./main.out 10 \
+	search_directory /usr/lib/ \\*.so file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000097s             0.000000s             0.000057s
+    search_directory             0.033972s             0.010709s             0.015347s
+         move_to_mem             0.002359s             0.000000s             0.001481s
+        remove_block             0.000004s             0.000000s             0.000004s
+             OVERALL             0.036470s             0.010709s             0.016932s
+./main.out 10 \
+	search_directory /usr/src/ \\* file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000095s             0.000000s             0.000057s
+    search_directory             0.107110s             0.000000s             0.086603s
+         move_to_mem             0.045114s             0.000000s             0.032950s
+        remove_block             0.000132s             0.000000s             0.000132s
+             OVERALL             0.152500s             0.000000s             0.119794s
+./main.out 10 \
+	search_directory /usr/ \\* file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000089s             0.000000s             0.000056s
+    search_directory             0.225273s             0.007381s             0.177247s
+         move_to_mem             0.096082s             0.000000s             0.071409s
+        remove_block             0.000242s             0.000000s             0.000242s
+             OVERALL             0.321729s             0.007381s             0.249000s
+./main.out 10 \
+	search_directory /bin/ \\* file.temp \
+	move_to_mem \
+	search_directory /usr dif\\* file.temp \
+	move_to_mem \
+	search_directory /usr \\*mac\\* file.temp \
+	remove_block 0 \
+	move_to_mem \
+	search_directory /usr/lib vim file.temp \
+	remove_block 0 \
+	remove_block 1 \
+	search_directory /usr vim file.temp \
+	move_to_mem
+           Operation                  Real                 User               System
+               START             0.000175s             0.000000s             0.000088s
+    search_directory             0.005916s             0.000000s             0.002461s
+         move_to_mem             0.000635s             0.000000s             0.000292s
+    search_directory             0.143282s             0.042805s             0.094448s
+         move_to_mem             0.000664s             0.000000s             0.000277s
+    search_directory             0.150662s             0.050432s             0.090407s
+        remove_block             0.000010s             0.000000s             0.000010s
+         move_to_mem             0.001643s             0.000000s             0.000954s
+    search_directory             0.024304s             0.010424s             0.011709s
+        remove_block             0.000026s             0.000000s             0.000028s
+        remove_block             0.000020s             0.000000s             0.000021s
+    search_directory             0.141332s             0.035655s             0.100297s
+         move_to_mem             0.000810s             0.000000s             0.000272s
+             OVERALL             0.469657s             0.139316s             0.301463s
+make[1]: Leaving directory `/home/vagrant/host/SysOpy/lab1/zad3b'
+
+============ SHARED -O2 ============
+
+make[1]: Entering directory `/home/vagrant/host/SysOpy/lab1/zad3b'
+./main.out 10 \
+	search_directory /usr/lib/ \\*.so file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000117s             0.000000s             0.000069s
+    search_directory             0.033257s             0.008167s             0.017469s
+         move_to_mem             0.002415s             0.000000s             0.001435s
+        remove_block             0.000003s             0.000000s             0.000003s
+             OVERALL             0.035832s             0.008167s             0.019018s
+./main.out 10 \
+	search_directory /usr/src/ \\* file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000094s             0.000000s             0.000056s
+    search_directory             0.108952s             0.000000s             0.086251s
+         move_to_mem             0.045445s             0.000000s             0.033376s
+        remove_block             0.000116s             0.000000s             0.000116s
+             OVERALL             0.154645s             0.000000s             0.119840s
+./main.out 10 \
+	search_directory /usr/ \\* file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000095s             0.000000s             0.000057s
+    search_directory             0.231347s             0.028675s             0.158748s
+         move_to_mem             0.101396s             0.000000s             0.074650s
+        remove_block             0.000221s             0.000000s             0.000221s
+             OVERALL             0.333098s             0.028675s             0.233719s
+./main.out 10 \
+	search_directory /bin/ \\* file.temp \
+	move_to_mem \
+	search_directory /usr dif\\* file.temp \
+	move_to_mem \
+	search_directory /usr \\*mac\\* file.temp \
+	remove_block 0 \
+	move_to_mem \
+	search_directory /usr/lib vim file.temp \
+	remove_block 0 \
+	remove_block 1 \
+	search_directory /usr vim file.temp \
+	move_to_mem
+           Operation                  Real                 User               System
+               START             0.000101s             0.000000s             0.000060s
+    search_directory             0.005662s             0.000000s             0.002342s
+         move_to_mem             0.000711s             0.000000s             0.000294s
+    search_directory             0.142136s             0.038716s             0.097865s
+         move_to_mem             0.000622s             0.000000s             0.000278s
+    search_directory             0.152731s             0.039005s             0.102666s
+        remove_block             0.000010s             0.000000s             0.000010s
+         move_to_mem             0.001575s             0.000000s             0.000935s
+    search_directory             0.023955s             0.000000s             0.022321s
+        remove_block             0.000003s             0.000000s             0.000003s
+        remove_block             0.000001s             0.000000s             0.000001s
+    search_directory             0.141315s             0.042350s             0.093482s
+         move_to_mem             0.000621s             0.000000s             0.000282s
+             OVERALL             0.469558s             0.120071s             0.320667s
+make[1]: Leaving directory `/home/vagrant/host/SysOpy/lab1/zad3b'
+
+============ SHARED -O3 ============
+
+make[1]: Entering directory `/home/vagrant/host/SysOpy/lab1/zad3b'
+./main.out 10 \
+	search_directory /usr/lib/ \\*.so file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000094s             0.000000s             0.000057s
+    search_directory             0.032755s             0.009542s             0.015402s
+         move_to_mem             0.002289s             0.000000s             0.001435s
+        remove_block             0.000003s             0.000000s             0.000003s
+             OVERALL             0.035188s             0.009542s             0.016947s
+./main.out 10 \
+	search_directory /usr/src/ \\* file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000104s             0.000000s             0.000061s
+    search_directory             0.110105s             0.005403s             0.082146s
+         move_to_mem             0.045648s             0.000000s             0.033243s
+        remove_block             0.000098s             0.000000s             0.000097s
+             OVERALL             0.155993s             0.005403s             0.115589s
+./main.out 10 \
+	search_directory /usr/ \\* file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000092s             0.000000s             0.000054s
+    search_directory             0.226526s             0.010241s             0.175079s
+         move_to_mem             0.093989s             0.005487s             0.064581s
+        remove_block             0.000224s             0.000017s             0.000207s
+             OVERALL             0.320868s             0.015746s             0.239960s
+./main.out 10 \
+	search_directory /bin/ \\* file.temp \
+	move_to_mem \
+	search_directory /usr dif\\* file.temp \
+	move_to_mem \
+	search_directory /usr \\*mac\\* file.temp \
+	remove_block 0 \
+	move_to_mem \
+	search_directory /usr/lib vim file.temp \
+	remove_block 0 \
+	remove_block 1 \
+	search_directory /usr vim file.temp \
+	move_to_mem
+           Operation                  Real                 User               System
+               START             0.000096s             0.000000s             0.000057s
+    search_directory             0.005293s             0.000000s             0.002237s
+         move_to_mem             0.000652s             0.000000s             0.000296s
+    search_directory             0.141437s             0.031705s             0.104055s
+         move_to_mem             0.000623s             0.000000s             0.000269s
+    search_directory             0.151442s             0.056043s             0.085189s
+        remove_block             0.000010s             0.000000s             0.000010s
+         move_to_mem             0.001540s             0.000000s             0.000905s
+    search_directory             0.025278s             0.014811s             0.008618s
+        remove_block             0.000016s             0.000000s             0.000016s
+        remove_block             0.000012s             0.000000s             0.000012s
+    search_directory             0.141024s             0.055515s             0.080435s
+         move_to_mem             0.000597s             0.000000s             0.000248s
+             OVERALL             0.468165s             0.158074s             0.282509s
+make[1]: Leaving directory `/home/vagrant/host/SysOpy/lab1/zad3b'
+
+============ SHARED -Os ============
+
+make[1]: Entering directory `/home/vagrant/host/SysOpy/lab1/zad3b'
+./main.out 10 \
+	search_directory /usr/lib/ \\*.so file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000099s             0.000000s             0.000058s
+    search_directory             0.033636s             0.008348s             0.017851s
+         move_to_mem             0.002355s             0.000000s             0.001493s
+        remove_block             0.000003s             0.000000s             0.000003s
+             OVERALL             0.036129s             0.008348s             0.019444s
+./main.out 10 \
+	search_directory /usr/src/ \\* file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000101s             0.000000s             0.000063s
+    search_directory             0.110126s             0.000000s             0.088198s
+         move_to_mem             0.045374s             0.000000s             0.032956s
+        remove_block             0.000100s             0.000000s             0.000100s
+             OVERALL             0.155738s             0.000000s             0.121358s
+./main.out 10 \
+	search_directory /usr/ \\* file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000097s             0.000000s             0.000058s
+    search_directory             0.228941s             0.017052s             0.171528s
+         move_to_mem             0.100586s             0.006260s             0.067567s
+        remove_block             0.000255s             0.000021s             0.000233s
+             OVERALL             0.329918s             0.023334s             0.239429s
+./main.out 10 \
+	search_directory /bin/ \\* file.temp \
+	move_to_mem \
+	search_directory /usr dif\\* file.temp \
+	move_to_mem \
+	search_directory /usr \\*mac\\* file.temp \
+	remove_block 0 \
+	move_to_mem \
+	search_directory /usr/lib vim file.temp \
+	remove_block 0 \
+	remove_block 1 \
+	search_directory /usr vim file.temp \
+	move_to_mem
+           Operation                  Real                 User               System
+               START             0.000096s             0.000000s             0.000057s
+    search_directory             0.005305s             0.000000s             0.002237s
+         move_to_mem             0.000682s             0.000000s             0.000302s
+    search_directory             0.140991s             0.047502s             0.088129s
+         move_to_mem             0.000651s             0.000000s             0.000265s
+    search_directory             0.151235s             0.062521s             0.079260s
+        remove_block             0.000011s             0.000000s             0.000011s
+         move_to_mem             0.001702s             0.000000s             0.000962s
+    search_directory             0.024646s             0.003541s             0.018983s
+        remove_block             0.000027s             0.000000s             0.000028s
+        remove_block             0.000020s             0.000000s             0.000021s
+    search_directory             0.142451s             0.051642s             0.084641s
+         move_to_mem             0.000615s             0.000000s             0.000243s
+             OVERALL             0.468595s             0.165206s             0.275321s
+make[1]: Leaving directory `/home/vagrant/host/SysOpy/lab1/zad3b'
+
+============ DYNAMIC -O0 ============
+
+make[1]: Entering directory `/home/vagrant/host/SysOpy/lab1/zad3b'
+./main.out 10 \
+	search_directory /usr/lib/ \\*.so file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000100s             0.000000s             0.000058s
+    search_directory             0.032710s             0.006929s             0.018399s
+         move_to_mem             0.002336s             0.000000s             0.001504s
+        remove_block             0.000004s             0.000000s             0.000004s
+             OVERALL             0.035187s             0.006929s             0.020005s
+./main.out 10 \
+	search_directory /usr/src/ \\* file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000095s             0.000000s             0.000056s
+    search_directory             0.108895s             0.004809s             0.082817s
+         move_to_mem             0.046197s             0.000000s             0.034017s
+        remove_block             0.000118s             0.000000s             0.000118s
+             OVERALL             0.155339s             0.004809s             0.117047s
+./main.out 10 \
+	search_directory /usr/ \\* file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000096s             0.000000s             0.000057s
+    search_directory             0.226400s             0.005130s             0.180574s
+         move_to_mem             0.101472s             0.000000s             0.074563s
+        remove_block             0.000254s             0.000000s             0.000253s
+             OVERALL             0.328260s             0.005130s             0.255489s
+./main.out 10 \
+	search_directory /bin/ \\* file.temp \
+	move_to_mem \
+	search_directory /usr dif\\* file.temp \
+	move_to_mem \
+	search_directory /usr \\*mac\\* file.temp \
+	remove_block 0 \
+	move_to_mem \
+	search_directory /usr/lib vim file.temp \
+	remove_block 0 \
+	remove_block 1 \
+	search_directory /usr vim file.temp \
+	move_to_mem
+           Operation                  Real                 User               System
+               START             0.000094s             0.000000s             0.000055s
+    search_directory             0.005303s             0.000000s             0.002227s
+         move_to_mem             0.000729s             0.000000s             0.000266s
+    search_directory             0.141170s             0.051734s             0.084651s
+         move_to_mem             0.000689s             0.000000s             0.000277s
+    search_directory             0.154561s             0.034560s             0.108678s
+        remove_block             0.000015s             0.000000s             0.000015s
+         move_to_mem             0.001665s             0.000000s             0.000983s
+    search_directory             0.024910s             0.007147s             0.015508s
+        remove_block             0.000018s             0.000000s             0.000019s
+        remove_block             0.000009s             0.000000s             0.000009s
+    search_directory             0.141292s             0.063362s             0.072338s
+         move_to_mem             0.000827s             0.000000s             0.000327s
+             OVERALL             0.471420s             0.156803s             0.285512s
+make[1]: Leaving directory `/home/vagrant/host/SysOpy/lab1/zad3b'
+
+============ DYNAMIC -O1 ============
+
+make[1]: Entering directory `/home/vagrant/host/SysOpy/lab1/zad3b'
+./main.out 10 \
+	search_directory /usr/lib/ \\*.so file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000090s             0.000000s             0.000057s
+    search_directory             0.033972s             0.010817s             0.015380s
+         move_to_mem             0.002591s             0.000000s             0.001524s
+        remove_block             0.000006s             0.000000s             0.000005s
+             OVERALL             0.036699s             0.010817s             0.017011s
+./main.out 10 \
+	search_directory /usr/src/ \\* file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000099s             0.000000s             0.000056s
+    search_directory             0.109376s             0.000000s             0.087080s
+         move_to_mem             0.046140s             0.005033s             0.028724s
+        remove_block             0.000109s             0.000015s             0.000093s
+             OVERALL             0.155758s             0.005050s             0.115990s
+./main.out 10 \
+	search_directory /usr/ \\* file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000100s             0.000000s             0.000061s
+    search_directory             0.229823s             0.022130s             0.164809s
+         move_to_mem             0.099738s             0.000000s             0.073295s
+        remove_block             0.000230s             0.000000s             0.000230s
+             OVERALL             0.329939s             0.022130s             0.238447s
+./main.out 10 \
+	search_directory /bin/ \\* file.temp \
+	move_to_mem \
+	search_directory /usr dif\\* file.temp \
+	move_to_mem \
+	search_directory /usr \\*mac\\* file.temp \
+	remove_block 0 \
+	move_to_mem \
+	search_directory /usr/lib vim file.temp \
+	remove_block 0 \
+	remove_block 1 \
+	search_directory /usr vim file.temp \
+	move_to_mem
+           Operation                  Real                 User               System
+               START             0.000097s             0.000000s             0.000058s
+    search_directory             0.005477s             0.000000s             0.002258s
+         move_to_mem             0.000638s             0.000000s             0.000279s
+    search_directory             0.141283s             0.043561s             0.092174s
+         move_to_mem             0.000680s             0.000000s             0.000291s
+    search_directory             0.153310s             0.035389s             0.107331s
+        remove_block             0.000014s             0.000000s             0.000014s
+         move_to_mem             0.001777s             0.000000s             0.000995s
+    search_directory             0.024420s             0.007151s             0.015455s
+        remove_block             0.000008s             0.000000s             0.000007s
+        remove_block             0.000002s             0.000000s             0.000001s
+    search_directory             0.142410s             0.071538s             0.064656s
+         move_to_mem             0.000667s             0.000000s             0.000255s
+             OVERALL             0.470891s             0.157639s             0.283899s
+make[1]: Leaving directory `/home/vagrant/host/SysOpy/lab1/zad3b'
+
+============ DYNAMIC -O2 ============
+
+make[1]: Entering directory `/home/vagrant/host/SysOpy/lab1/zad3b'
+./main.out 10 \
+	search_directory /usr/lib/ \\*.so file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000100s             0.000000s             0.000061s
+    search_directory             0.034172s             0.012588s             0.013621s
+         move_to_mem             0.002298s             0.000000s             0.001470s
+        remove_block             0.000008s             0.000000s             0.000007s
+             OVERALL             0.036628s             0.012588s             0.015215s
+./main.out 10 \
+	search_directory /usr/src/ \\* file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000103s             0.000000s             0.000063s
+    search_directory             0.111141s             0.000000s             0.088414s
+         move_to_mem             0.045812s             0.005026s             0.028619s
+        remove_block             0.000114s             0.000017s             0.000097s
+             OVERALL             0.157209s             0.005044s             0.117234s
+./main.out 10 \
+	search_directory /usr/ \\* file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000088s             0.000000s             0.000058s
+    search_directory             0.229667s             0.005292s             0.181570s
+         move_to_mem             0.100863s             0.000000s             0.073790s
+        remove_block             0.000270s             0.000000s             0.000270s
+             OVERALL             0.330931s             0.005292s             0.255735s
+./main.out 10 \
+	search_directory /bin/ \\* file.temp \
+	move_to_mem \
+	search_directory /usr dif\\* file.temp \
+	move_to_mem \
+	search_directory /usr \\*mac\\* file.temp \
+	remove_block 0 \
+	move_to_mem \
+	search_directory /usr/lib vim file.temp \
+	remove_block 0 \
+	remove_block 1 \
+	search_directory /usr vim file.temp \
+	move_to_mem
+           Operation                  Real                 User               System
+               START             0.000137s             0.000000s             0.000047s
+    search_directory             0.005304s             0.000000s             0.002331s
+         move_to_mem             0.000700s             0.000000s             0.000296s
+    search_directory             0.142778s             0.042627s             0.094096s
+         move_to_mem             0.000638s             0.000000s             0.000279s
+    search_directory             0.151580s             0.050321s             0.090197s
+        remove_block             0.000014s             0.000000s             0.000014s
+         move_to_mem             0.001618s             0.000000s             0.000957s
+    search_directory             0.024269s             0.000000s             0.022140s
+        remove_block             0.000019s             0.000000s             0.000021s
+        remove_block             0.000013s             0.000000s             0.000013s
+    search_directory             0.140159s             0.043274s             0.091536s
+         move_to_mem             0.000604s             0.000000s             0.000254s
+             OVERALL             0.467971s             0.136222s             0.302339s
+make[1]: Leaving directory `/home/vagrant/host/SysOpy/lab1/zad3b'
+
+============ DYNAMIC -O3 ============
+
+make[1]: Entering directory `/home/vagrant/host/SysOpy/lab1/zad3b'
+./main.out 10 \
+	search_directory /usr/lib/ \\*.so file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000100s             0.000000s             0.000057s
+    search_directory             0.032440s             0.007847s             0.016674s
+         move_to_mem             0.002411s             0.000000s             0.001487s
+        remove_block             0.000003s             0.000000s             0.000003s
+             OVERALL             0.034991s             0.007847s             0.018261s
+./main.out 10 \
+	search_directory /usr/src/ \\* file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000099s             0.000000s             0.000058s
+    search_directory             0.110790s             0.016248s             0.071490s
+         move_to_mem             0.045709s             0.000000s             0.033309s
+        remove_block             0.000096s             0.000000s             0.000095s
+             OVERALL             0.156741s             0.016248s             0.105004s
+./main.out 10 \
+	search_directory /usr/ \\* file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000096s             0.000000s             0.000056s
+    search_directory             0.226650s             0.009531s             0.177331s
+         move_to_mem             0.101368s             0.008510s             0.066627s
+        remove_block             0.000207s             0.000023s             0.000184s
+             OVERALL             0.328357s             0.018066s             0.244238s
+./main.out 10 \
+	search_directory /bin/ \\* file.temp \
+	move_to_mem \
+	search_directory /usr dif\\* file.temp \
+	move_to_mem \
+	search_directory /usr \\*mac\\* file.temp \
+	remove_block 0 \
+	move_to_mem \
+	search_directory /usr/lib vim file.temp \
+	remove_block 0 \
+	remove_block 1 \
+	search_directory /usr vim file.temp \
+	move_to_mem
+           Operation                  Real                 User               System
+               START             0.000094s             0.000000s             0.000056s
+    search_directory             0.005256s             0.000000s             0.002241s
+         move_to_mem             0.000683s             0.000000s             0.000274s
+    search_directory             0.141074s             0.042271s             0.093267s
+         move_to_mem             0.000634s             0.000000s             0.000265s
+    search_directory             0.153213s             0.035252s             0.106996s
+        remove_block             0.000027s             0.000000s             0.000027s
+         move_to_mem             0.001718s             0.000000s             0.001003s
+    search_directory             0.024440s             0.004258s             0.018347s
+        remove_block             0.000027s             0.000000s             0.000028s
+        remove_block             0.000017s             0.000000s             0.000018s
+    search_directory             0.141141s             0.042273s             0.093476s
+         move_to_mem             0.000732s             0.000000s             0.000310s
+             OVERALL             0.469249s             0.124054s             0.316521s
+make[1]: Leaving directory `/home/vagrant/host/SysOpy/lab1/zad3b'
+
+============ DYNAMIC -Os ============
+
+make[1]: Entering directory `/home/vagrant/host/SysOpy/lab1/zad3b'
+./main.out 10 \
+	search_directory /usr/lib/ \\*.so file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000096s             0.000000s             0.000057s
+    search_directory             0.033710s             0.010848s             0.015512s
+         move_to_mem             0.002541s             0.000000s             0.001528s
+        remove_block             0.000006s             0.000000s             0.000006s
+             OVERALL             0.036392s             0.010848s             0.017145s
+./main.out 10 \
+	search_directory /usr/src/ \\* file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000095s             0.000000s             0.000056s
+    search_directory             0.109201s             0.013029s             0.074891s
+         move_to_mem             0.045730s             0.000000s             0.033181s
+        remove_block             0.000100s             0.000000s             0.000100s
+             OVERALL             0.155161s             0.013029s             0.108268s
+./main.out 10 \
+	search_directory /usr/ \\* file.temp \
+	move_to_mem \
+	remove_block 0
+           Operation                  Real                 User               System
+               START             0.000095s             0.000000s             0.000057s
+    search_directory             0.226979s             0.011225s             0.175053s
+         move_to_mem             0.099707s             0.000000s             0.072985s
+        remove_block             0.000212s             0.000000s             0.000212s
+             OVERALL             0.327032s             0.011225s             0.248350s
+./main.out 10 \
+	search_directory /bin/ \\* file.temp \
+	move_to_mem \
+	search_directory /usr dif\\* file.temp \
+	move_to_mem \
+	search_directory /usr \\*mac\\* file.temp \
+	remove_block 0 \
+	move_to_mem \
+	search_directory /usr/lib vim file.temp \
+	remove_block 0 \
+	remove_block 1 \
+	search_directory /usr vim file.temp \
+	move_to_mem
+           Operation                  Real                 User               System
+               START             0.000091s             0.000000s             0.000058s
+    search_directory             0.005213s             0.000000s             0.002255s
+         move_to_mem             0.000606s             0.000000s             0.000269s
+    search_directory             0.140333s             0.015806s             0.119510s
+         move_to_mem             0.000680s             0.000000s             0.000263s
+    search_directory             0.153755s             0.031350s             0.110914s
+        remove_block             0.000015s             0.000000s             0.000015s
+         move_to_mem             0.001665s             0.000000s             0.001002s
+    search_directory             0.024540s             0.003571s             0.019074s
+        remove_block             0.000018s             0.000000s             0.000019s
+        remove_block             0.000011s             0.000000s             0.000011s
+    search_directory             0.142190s             0.034834s             0.101771s
+         move_to_mem             0.000602s             0.000000s             0.000247s
+             OVERALL             0.469861s             0.085561s             0.355565s
+make[1]: Leaving directory `/home/vagrant/host/SysOpy/lab1/zad3b'
