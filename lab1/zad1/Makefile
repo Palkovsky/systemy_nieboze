@@ -23,11 +23,11 @@ static: $(NAME).o
 
 # Generating object file
 $(NAME).o: $(NAME).c $(NAME).h
-	$(CC) -c -o $@ $(NAME).c
+	$(CC) -c -o $@ $<
 
 # Generating position indepented object file
 $(NAME)_pic.o: $(NAME).c $(NAME).h
-	$(CC) -fPIC -c -o $@ $(NAME).c
+	$(CC) -fPIC -c -o $@ $<
 
 # Remove all object files, static libraries and shared libraries
 clean:

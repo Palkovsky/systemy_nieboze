@@ -1,0 +1,132 @@
+DLA STATYCZNEJ:
+
+13k:
+           Operation                  Real                 User               System
+               START             0.000187s             0.000000s             0.000100s
+    search_directory             0.032377s             0.010198s             0.014505s
+         move_to_mem             0.002265s             0.000000s             0.001446s
+        remove_block             0.000003s             0.000000s             0.000003s
+             OVERALL             0.034872s             0.010198s             0.016097s
+
+25k:
+           Operation                  Real                 User               System
+               START             0.000254s             0.000000s             0.000085s
+    search_directory             0.107781s             0.000000s             0.086367s
+         move_to_mem             0.045805s             0.003843s             0.029681s
+        remove_block             0.000100s             0.000011s             0.000089s
+             OVERALL             0.153981s             0.003856s             0.116265s
+
+70k:
+           Operation                  Real                 User               System
+               START             0.000164s             0.000000s             0.000088s
+    search_directory             0.226324s             0.009823s             0.177833s
+         move_to_mem             0.098180s             0.000000s             0.072778s
+        remove_block             0.000234s             0.000000s             0.000234s
+             OVERALL             0.324943s             0.009823s             0.250979s
+
+complex:
+           Operation                  Real                 User               System
+               START             0.000169s             0.000000s             0.000087s
+    search_directory             0.008859s             0.000000s             0.002262s
+         move_to_mem             0.000648s             0.000000s             0.000297s
+    search_directory             0.141809s             0.055868s             0.080882s
+         move_to_mem             0.000623s             0.000000s             0.000268s
+    search_directory             0.151382s             0.055722s             0.084695s
+        remove_block             0.000009s             0.000000s             0.000009s
+         move_to_mem             0.001681s             0.000000s             0.000995s
+    search_directory             0.024877s             0.003640s             0.019357s
+        remove_block             0.000004s             0.000000s             0.000004s
+        remove_block             0.000001s             0.000000s             0.000001s
+    search_directory             0.142568s             0.040014s             0.097082s
+         move_to_mem             0.000629s             0.000000s             0.000247s
+             OVERALL             0.473367s             0.155244s             0.286308s
+
+
+DLA WSPÓŁDZIELONEJ:
+
+13k:
+           Operation                  Real                 User               System
+               START             0.000167s             0.000000s             0.000087s
+    search_directory             0.032306s             0.009979s             0.014395s
+         move_to_mem             0.002449s             0.000000s             0.001473s
+        remove_block             0.000003s             0.000000s             0.000004s
+             OVERALL             0.034965s             0.009979s             0.016001s
+
+25k:
+           Operation                  Real                 User               System
+               START             0.000163s             0.000000s             0.000087s
+    search_directory             0.108791s             0.004112s             0.083279s
+         move_to_mem             0.046131s             0.007124s             0.026882s
+        remove_block             0.000097s             0.000019s             0.000077s
+             OVERALL             0.155217s             0.011257s             0.110362s
+
+70k:
+           Operation                  Real                 User               System
+               START             0.000168s             0.000000s             0.000087s
+    search_directory             0.229586s             0.000000s             0.187891s
+         move_to_mem             0.100960s             0.000000s             0.074060s
+        remove_block             0.000227s             0.000000s             0.000227s
+             OVERALL             0.330980s             0.000000s             0.262309s
+
+complex:
+           Operation                  Real                 User               System
+               START             0.000164s             0.000000s             0.000088s
+    search_directory             0.005433s             0.000000s             0.002247s
+         move_to_mem             0.000632s             0.000000s             0.000272s
+    search_directory             0.140319s             0.047351s             0.087868s
+         move_to_mem             0.000615s             0.000000s             0.000267s
+    search_directory             0.150429s             0.028899s             0.110733s
+        remove_block             0.000011s             0.000000s             0.000011s
+         move_to_mem             0.001613s             0.000000s             0.000952s
+    search_directory             0.024074s             0.009253s             0.012686s
+        remove_block             0.000003s             0.000000s             0.000004s
+        remove_block             0.000001s             0.000000s             0.000001s
+    search_directory             0.140701s             0.055358s             0.079920s
+         move_to_mem             0.000630s             0.000000s             0.000242s
+             OVERALL             0.464730s             0.140861s             0.295406s
+
+DLA DYNAMICZNEJ:
+
+13k:
+           Operation                  Real                 User               System
+               START             0.000209s             0.000000s             0.000108s
+    search_directory             0.033421s             0.012312s             0.013423s
+         move_to_mem             0.002372s             0.000000s             0.001518s
+        remove_block             0.000004s             0.000000s             0.000004s
+             OVERALL             0.036046s             0.012312s             0.015097s
+
+25k:
+           Operation                  Real                 User               System
+               START             0.000193s             0.000000s             0.000115s
+    search_directory             0.109404s             0.006110s             0.080464s
+         move_to_mem             0.046720s             0.000000s             0.034419s
+        remove_block             0.000136s             0.000000s             0.000136s
+             OVERALL             0.156490s             0.006110s             0.115175s
+
+70k:
+           Operation                  Real                 User               System
+               START             0.000163s             0.000000s             0.000087s
+    search_directory             0.227992s             0.004489s             0.180593s
+         move_to_mem             0.096590s             0.000000s             0.072572s
+        remove_block             0.000234s             0.000000s             0.000234s
+             OVERALL             0.325020s             0.004489s             0.253532s
+
+complex:
+           Operation                  Real                 User               System
+               START             0.000160s             0.000000s             0.000087s
+    search_directory             0.005527s             0.000000s             0.002263s
+         move_to_mem             0.005653s             0.000000s             0.000301s
+    search_directory             0.141591s             0.031765s             0.104406s
+         move_to_mem             0.000699s             0.000000s             0.000295s
+    search_directory             0.150268s             0.055534s             0.084488s
+        remove_block             0.000014s             0.000000s             0.000014s
+         move_to_mem             0.001760s             0.000000s             0.000953s
+    search_directory             0.024404s             0.012722s             0.009593s
+        remove_block             0.000007s             0.000000s             0.000008s
+        remove_block             0.000001s             0.000000s             0.000002s
+    search_directory             0.141126s             0.027653s             0.107698s
+         move_to_mem             0.000676s             0.000000s             0.000278s
+             OVERALL             0.472011s             0.127674s             0.310524s
+
+
+Różnice w czasie wykonywania są niemal niezauważalne i na ich podstawie nie da się stwierdzić, który sposób jest najszybyszy. Wydawać by się mogło, że biblioteka ładowana dynamiczne będzie wolniejsze od statycznej i współdzielonej, jednak nie udało się w tym eksperymencie tego zaoobserwować. 
