@@ -2,9 +2,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <time.h>
 #include <unistd.h>
-#include <sys/times.h>
+#include <time.h>
+#include <sys/time.h>
+#include <sys/resource.h>
+
 
 // Defines
 #ifndef REPORT_FILENAME
@@ -23,17 +25,23 @@
   } mylib_block_array;
 #endif
 
+typedef struct timeval timeval;
 typedef struct timespec timespec;
-typedef struct tms tms;
+typedef struct rusage rusage;
 
 // Global variables
 FILE *report_file;
-tms *tms_execution_start; // time of benchmark start
-tms *tms_operation_start; // start of current step
-tms *tms_operation_end;   // helper buffer
-timespec *ts_execution_start;
-timespec *ts_operation_start;
-timespec *ts_operation_end;
+timeval *utime_execution_start;
+timeval *utime_operation_start;
+timeval *utime_operation_end;
+
+timeval *stime_execution_start;
+timeval *stime_operation_start;
+timeval *stime_operation_end;
+
+timeval *rtime_execution_start;
+timeval *rtime_operation_start;
+timeval *rtime_operation_end;
 
 void printUsageAndExit(){
   printf("Usage: array_size [operations]\n");
@@ -45,46 +53,82 @@ void printUsageAndExit(){
   exit(1);
 }
 
-void measureTimes(tms *tms_struct, timespec *timespec_struct){
-  if(times(tms_struct) == -1){
-    printf("Unable to access sys/time.h clock.\n");
+void measureTimes(timeval *utime, timeval *stime, timeval *rtime){
+  rusage res_usage;
+  timespec timespec;
+
+  if(getrusage(RUSAGE_SELF, &res_usage) == -1){  // calculate usage of current process
+    printf("Unable to access sys/resource.h clock.\n");
     exit(3);
   }
 
-  if(clock_gettime(CLOCK_REALTIME, timespec_struct) == -1){
-    printf("Unable to acces time.h clock.\n");
+  utime->tv_usec = res_usage.ru_utime.tv_usec;
+  stime->tv_usec = res_usage.ru_stime.tv_usec;
+  utime->tv_sec  = res_usage.ru_utime.tv_sec;
+  stime->tv_sec  = res_usage.ru_stime.tv_sec;
+
+  if(getrusage(RUSAGE_CHILDREN, &res_usage) == -1){ // caluclate usage of children process(find)
+    printf("Error accessing user and system time by sys/resurces.h.\n");
+    exit(3);
+  }
+
+  utime->tv_usec += res_usage.ru_utime.tv_usec;
+  if (utime->tv_usec >= 1000000){
+      utime->tv_sec++;
+      utime->tv_usec -= 1000000;
+  }
+
+  stime->tv_usec += res_usage.ru_stime.tv_usec;
+  if (stime->tv_usec >= 1000000){
+    stime->tv_sec++;
+    stime->tv_usec -= 1000000;
+  }
+
+
+  utime->tv_sec  += res_usage.ru_utime.tv_sec;
+  stime->tv_sec  += res_usage.ru_stime.tv_sec;
+
+  if(clock_gettime(CLOCK_REALTIME, &timespec) == -1){
+    printf("Error accessing user and system time by time.h.\n");
     exit(4);
   }
+
+  rtime->tv_usec = timespec.tv_nsec/1000;
+  rtime->tv_sec = timespec.tv_sec;
 }
 
-void printTimes(const char* operation_name, tms *tms_start_time, timespec *ts_start_time){
-  measureTimes(tms_operation_end, ts_operation_end);
+void printTimes(const char* operation_name, timeval *u_start, timeval *s_start, timeval *r_start){
+  measureTimes(utime_operation_end, stime_operation_end, rtime_operation_end);
 
-  long realTime_nano = ts_operation_end->tv_nsec - ts_start_time->tv_nsec; //real time in second
-  double realTime = (double)realTime_nano/1000000000.0;
+  timeval *u_end = utime_operation_end;
+  timeval *s_end = stime_operation_end;
+  timeval *r_end = rtime_operation_end;
 
+  suseconds_t realTime_micro = r_end->tv_usec - r_start->tv_usec;
+  double realTime = (double) realTime_micro/1000000.0 + r_end->tv_sec - r_start->tv_sec;
 
-  clock_t userTime_clocks = tms_operation_end->tms_cutime - tms_start_time->tms_cutime;
-  userTime_clocks += tms_operation_end->tms_utime - tms_start_time->tms_utime;
-  double userTime = (double) userTime_clocks/(sysconf(_SC_CLK_TCK));
+  suseconds_t userTime_micro = u_end->tv_usec - u_start->tv_usec;
+  double userTime = (double) userTime_micro/1000000.0  + u_end->tv_sec - u_start->tv_sec;
 
-  clock_t systemTime_clocks = tms_operation_end->tms_cstime - tms_start_time->tms_cstime;
-  systemTime_clocks += tms_operation_end->tms_stime - tms_start_time->tms_stime;
-  double systemTime = (double) systemTime_clocks/(sysconf(_SC_CLK_TCK));
+  suseconds_t systemTime_micro = s_end->tv_usec - s_start->tv_usec;
+  double systemTime = (double) systemTime_micro/1000000.0 + s_end->tv_sec - s_start->tv_sec;;
 
-  printf("%20s %20lfs %20lfs %20lfs\n",
+  printf("%20s %20fs %20fs %20fs\n",
          operation_name,
          realTime,
          userTime,
          systemTime);
   fprintf(report_file,
-         "%20s %20lfs %20lfs %20lfs\n",
+         "%20s %20fs %20fs %20fs\n",
          operation_name,
          realTime,
          userTime,
          systemTime);
 }
 
+/*
+  Implementations of user commands
+ */
 void search_directory(const char* dir, const char* lookup, const char* temp){
   int8_t status;
 
@@ -131,7 +175,7 @@ void parseArgs(mylib_block_array *arr, uint32_t count, char** operations){
     char* operation = operations[i];
 
     //Save time before operation
-    measureTimes(tms_operation_start, ts_operation_start);
+    measureTimes(utime_operation_start, stime_operation_start, rtime_operation_start);
 
     if(strcmp("search_directory", operation) == 0){
 
@@ -166,7 +210,7 @@ void parseArgs(mylib_block_array *arr, uint32_t count, char** operations){
     }
 
     // Print times of single operation
-    printTimes(operation, tms_operation_start, ts_operation_start);
+    printTimes(operation, utime_operation_start, stime_operation_start, rtime_operation_start);
   }
 }
 
@@ -182,14 +226,17 @@ int main(int argc, char **argv){
     exit(2);
   }
 
-  // Allocating space for sys/time.h buffers
-  tms_execution_start = calloc(1, sizeof(tms));
-  tms_operation_start = calloc(1, sizeof(tms));
-  tms_operation_end = calloc(1, sizeof(tms));
-  // Allocating space for time.h buffers
-  ts_execution_start = calloc(1, sizeof(timespec));
-  ts_operation_start = calloc(1, sizeof(timespec));
-  ts_operation_end = calloc(1, sizeof(timespec));
+  // Allocating space for sys/resurce.h buffers
+  timeval* timevals = calloc(9, sizeof(timeval));
+  utime_execution_start = timevals;
+  utime_operation_start = timevals + 1;
+  utime_operation_end  = timevals+2;
+  stime_execution_start = timevals+3;
+  stime_operation_start = timevals+4;
+  stime_operation_end = timevals+5;
+  rtime_execution_start = timevals+6;
+  rtime_operation_start = timevals+7;
+  rtime_operation_end = timevals+8;
 
   // First arg is always array_size
   int array_size = strtol(argv[1], NULL, 10);
@@ -200,27 +247,22 @@ int main(int argc, char **argv){
   mylib_block_array *arr = mylib_InitArray(array_size);
 
   // Load up execution_start tirmes
-  measureTimes(tms_execution_start, ts_execution_start);
+  measureTimes(utime_execution_start, stime_execution_start, rtime_execution_start);
 
   printf("%20s  %20s %20s %20s\n", "Operation", "Real", "User", "System");
   fprintf(report_file, "%20s  %20s %20s %20s\n", "Operation", "Real", "User", "System");
-  printTimes("START", tms_execution_start, ts_execution_start);
+  printTimes("START", utime_execution_start, stime_execution_start, rtime_execution_start);
 
   // Parse and execute arguments operations
   parseArgs(arr, argc - 2, argv+2);
 
   // Print elapsed tiems since execution
-  printTimes("OVERALL", tms_execution_start, ts_execution_start);
+  printTimes("OVERALL", utime_execution_start, stime_execution_start, rtime_execution_start);
 
   // Release taken memory
   mylib_DisposeArray(arr);
   fclose(report_file);
-  free(tms_execution_start);
-  free(tms_operation_start);
-  free(tms_operation_end);
-  free(ts_execution_start);
-  free(ts_operation_start);
-  free(ts_operation_end);
+  free(timevals);
 
   return 0;
 }
