@@ -36,7 +36,7 @@ Wyniki dla 25 tysięcy plików(/usr/src/):
              OVERALL             0.157301s             0.004399s             0.118796s
 
 
-Można też zeuważyć zwiększczenie czasu systemowego w fazie move_to_mem, wynika to z tego że wykonujemy operację czytania bajt po bajcie pliku tymczasowego, który dla większej ilości plików znalezionych za pomocą find jest większy.
+Można też zeuważyć zwiększczenie czasu systemowego w fazie move_to_mem, wynika to z tego że wykonujemy operację czytania bajt po bajcie pliku tymczasowego, który dla większej ilości plików znalezionych za pomocą find jest większy. Czas w trybie uzytkownika w move_to_mem wciąż jest bardzo niski, wynika to z tego że procedura jest tak szybka że procesor nie zdąża zmierzyć jej czasu.
 
 Wyniki dla około 70 tysięcy plików(/usr/):
 
@@ -46,6 +46,8 @@ Wyniki dla około 70 tysięcy plików(/usr/):
          move_to_mem             0.102067s             0.005793s             0.068430s
         remove_block             0.000267s             0.000020s             0.000245s
              OVERALL             0.331697s             0.010622s             0.252357s
+
+Oczywiście obserwujemy wzrost czasu użytkownika/systemowego w fazie search_directory. Dla takiej wielkości plików procedura move_to_mem spędziła wystarczająco dużo czasu w trybie użytkownika aby timer zarejestrował jakiś czas.
 
 Czas spędzany w trybie użytkownika jest dość niski, aby upewnić się że dobrze go mierzę dodaję spinlocka przy obsłudzie procedury move_to_mem. Spodziewam się znacznego zwiększania czas użytkownika w tej fazie:
 
