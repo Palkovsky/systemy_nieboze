@@ -10,73 +10,72 @@ Dla każdej wielkości dokonujemy pomiaru czasu:
 
 Wyniki dla 13 tysięcy plików(/usr/lib/):
 
-           Operation                  Real                 User               System
-               START             0.000385s             0.000000s             0.000123s
-    search_directory             0.033260s             0.004171s             0.021750s
-         move_to_mem             0.002490s             0.000000s             0.001560s
-        remove_block             0.000003s             0.000000s             0.000003s
-             OVERALL             0.037273s             0.004171s             0.023530s
+                                         Operation                  Real                 User               System
+                                   create_table 10             0.000008s             0.000000s             0.000011s
+        search_directory /usr/lib/ \*.so file.temp             0.129886s             0.000000s             0.068679s
+                                       move_to_mem             0.002415s             0.000000s             0.001511s
+                                    remove_block 0             0.000004s             0.000000s             0.000004s
+                                             TOTAL             0.133309s             0.000000s             0.070299s
 
-
-Cała procedura zajęła około 37 milisekund. Najwięcej czasu zostało spędzone w stanie search_directory, czyli na wykonywaniu polecenia 'find' i zapisywaniu pliku tymczasowego.
+Cała procedura zajęła około 133 milisekund. Najwięcej czasu zostało spędzone w stanie search_directory, czyli na wykonywaniu polecenia 'find' i zapisywaniu pliku tymczasowego.
 
 Czas rzeczywisty jest wyższy od czasów użytkownika i systemu z tego powodu, że program find przez większość czasu pozostaje bezczynny czekając na odczyt danych z dysku.
 
-move_to_mem okazuje około 1 milisekundę czas systemowego, ponieważ musi dokonać odczyty pliku, czyli operacji IO
+move_to_mem trwa około 1 milisekundę czas systemowego, a rzeczywistego około 2 milisekundy, wynika to z czekania na odczyt pliku(operacja IO).
 
-Usuwanie polega jedynie na wywołaniu free() i przypisaniu jednemu wskaźnikowi wartości NULL. Niezależnie od wielkości zwalnianego bloku operacja ta będzie szybka.
+Usuwanie polega jedynie na wywołaniu free() i przypisaniu jednemu wskaźnikowi wartości NULL. Niezależnie od wielkości zwalnianego bloku operacja ta będzie szybka i dla większych bloków będzie nieznacznie wzrastać.
 
 Wyniki dla 25 tysięcy plików(/usr/src/):
 
-           Operation                  Real                 User               System
-               START             0.000375s             0.000000s             0.000137s
-    search_directory             0.109965s             0.004399s             0.084551s
-         move_to_mem             0.045846s             0.000000s             0.033838s
-        remove_block             0.000166s             0.000000s             0.000166s
-             OVERALL             0.157301s             0.004399s             0.118796s
+                                         Operation                  Real                 User               System
+                                   create_table 10             0.000004s             0.000000s             0.000007s
+           search_directory /usr/src/ \* file.temp             0.686483s             0.035089s             0.317882s
+                                       move_to_mem             0.050130s             0.007956s             0.029469s
+                                    remove_block 0             0.000143s             0.000029s             0.000115s
+                                             TOTAL             0.738031s             0.043082s             0.347563s
 
 
-Można też zeuważyć zwiększczenie czasu systemowego w fazie move_to_mem, wynika to z tego że wykonujemy operację czytania bajt po bajcie pliku tymczasowego, który dla większej ilości plików znalezionych za pomocą find jest większy. Czas w trybie uzytkownika w move_to_mem wciąż jest bardzo niski, wynika to z tego że procedura jest tak szybka że procesor nie zdąża zmierzyć jej czasu.
+Można też zeuważyć zwiększczenie czasu systemowego i użytkownika w fazie move_to_mem, wynika to z tego że wykonujemy operację czytania bajt po bajcie pliku tymczasowego, który dla większej ilości plików znalezionych za pomocą find jest większy. Jak widać zwolnienie pamięci zajmuje 0.1 milisekundy.
 
 Wyniki dla około 70 tysięcy plików(/usr/):
 
-           Operation                  Real                 User               System
-               START             0.000369s             0.000000s             0.000124s
-    search_directory             0.227883s             0.004801s             0.183410s
-         move_to_mem             0.102067s             0.005793s             0.068430s
-        remove_block             0.000267s             0.000020s             0.000245s
-             OVERALL             0.331697s             0.010622s             0.252357s
+                                         Operation                  Real                 User               System
+                                   create_table 10             0.000005s             0.000000s             0.000007s
+               search_directory /usr/ \* file.temp             1.262104s             0.014382s             0.635435s
+                                       move_to_mem             0.102143s             0.007006s             0.068671s
+                                    remove_block 0             0.000223s             0.000020s             0.000202s
+                                             TOTAL             1.366383s             0.021418s             0.704789s
 
-Oczywiście obserwujemy wzrost czasu użytkownika/systemowego w fazie search_directory. Dla takiej wielkości plików procedura move_to_mem spędziła wystarczająco dużo czasu w trybie użytkownika aby timer zarejestrował jakiś czas.
+Oczywiście obserwujemy wzrost czasu użytkownika/systemowego w fazie search_directory. Procedura move_to_mem spędziła znacznie więcej czasu w trybie jądra, ponieważ musiała odczytać większy plik(więcej operaci IO)
 
 Czas spędzany w trybie użytkownika jest dość niski, aby upewnić się że dobrze go mierzę dodaję spinlocka przy obsłudzie procedury move_to_mem. Spodziewam się znacznego zwiększania czas użytkownika w tej fazie:
+                                         Operation                  Real                 User               System
+                                   create_table 10             0.000004s             0.000000s             0.000006s
+               search_directory /usr/ \* file.temp             1.257711s             0.002490s             0.633049s
+                                       move_to_mem            22.604051s            22.455875s             0.058666s
+                                    remove_block 0             0.000178s             0.000177s             0.000001s
+                                             TOTAL            23.863884s            22.458591s             0.692154s
 
-           Operation                  Real                 User               System
-               START             0.000322s             0.000000s             0.000110s
-    search_directory             0.224308s             0.025446s             0.160107s
-         move_to_mem            22.521324s            22.381511s             0.066940s
-        remove_block             0.000212s             0.000211s             0.000001s
-             OVERALL            22.747348s            22.407301s             0.227227s
-
-Jak widać po dodaniu spinlocka czas spędzony w trybie użytkownika zwiększył się.
+Jak widać po dodaniu spinlocka czas spędzony w trybie użytkownika zwiększył się, co pokazuje że nasz sposób pomiaru jest prawidłowy.
 
 Dla sekwencji różnych operacji:
 
-           Operation                  Real                 User               System
-               START             0.000377s             0.000000s             0.000140s
-    search_directory             0.007782s             0.000000s             0.002109s
-         move_to_mem             0.000651s             0.000000s             0.000295s
-    search_directory             0.147454s             0.036238s             0.101732s
-         move_to_mem             0.000674s             0.000000s             0.000296s
-    search_directory             0.153880s             0.051585s             0.092380s
-        remove_block             0.000009s             0.000000s             0.000009s
-         move_to_mem             0.001745s             0.000000s             0.001036s
-    search_directory             0.025013s             0.013127s             0.010450s
-        remove_block             0.000004s             0.000000s             0.000004s
-        remove_block             0.000001s             0.000000s             0.000001s
-    search_directory             0.146396s             0.050689s             0.086768s
-         move_to_mem             0.000769s             0.000000s             0.000361s
-             OVERALL             0.489200s             0.151639s             0.296021s
+                                         Operation                  Real                 User               System
+                                   create_table 10             0.000004s             0.000000s             0.000006s
+               search_directory /bin/ \* file.temp             0.007085s             0.000000s             0.003632s
+                                       move_to_mem             0.000727s             0.000000s             0.000367s
+             search_directory /usr dif\* file.temp             1.143908s             0.000000s             0.569227s
+                                       move_to_mem             0.000712s             0.000000s             0.000318s
+           search_directory /usr \*mac\* file.temp             0.154562s             0.047823s             0.096893s
+                                    remove_block 0             0.000004s             0.000000s             0.000004s
+                                       move_to_mem             0.001782s             0.000000s             0.001035s
+           search_directory /usr/lib vim file.temp             0.025364s             0.007480s             0.016101s
+                                    remove_block 0             0.000004s             0.000000s             0.000005s
+                                    remove_block 1             0.000002s             0.000000s             0.000003s
+               search_directory /usr vim file.temp             0.142218s             0.059784s             0.076844s
+                                       move_to_mem             0.000744s             0.000000s             0.000322s
+                                             TOTAL             1.480828s             0.115087s             0.765186s
+
 
 
 Dla sekwencji wielu operacji spostrzeżenia się utrzymują. Widać tutaj, że nie ładujemy zbyt dużych plików do pamięci dlatego czas systemowy i użytkownika w move_to_mem jest niski.

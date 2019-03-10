@@ -62,7 +62,11 @@ clean:
 	rm -f *.o *.a *.so *.temp *.out *.rap
 
 # Tests for different sizes of directories
-all_tests: test_simple_13k test_simple_25k test_simple_70k test_complex
+all_tests:
+	make test_simple_13k
+	make test_simple_25k
+	make test_simple_70k
+	make test_complex
 
 test_simple_70k:
 	./$(NAME).out 10 \

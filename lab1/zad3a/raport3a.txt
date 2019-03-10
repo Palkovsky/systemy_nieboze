@@ -1,131 +1,128 @@
 Różnice w czasie wykonywania są niemal niezauważalne i na ich podstawie nie da się stwierdzić, który sposób jest najszybyszy. Wydawać by się mogło, że biblioteka ładowana dynamiczne będzie wolniejsze od statycznej i współdzielonej, jednak nie udało się w tym eksperymencie tego zaoobserwować. 
 
-DLA STATYCZNEJ:
+Przed uruchomieniem każdego testu czyszczony był cache finda komendą:
+      echo 3 > /proc/sys/vm/drop_caches
+Komenda ta nie znajduje się w Makefile, bo wymaga uruchomienia jako root.
+Działanie cache można łatwo zaoobserwować w teście sekwencji różnych operacji, gdzie pierwsze przeszukanie /usr/ trwa ponad sekundę, a następne zaledwie 150 ms.
 
-13k:
-           Operation                  Real                 User               System
-               START             0.000187s             0.000000s             0.000100s
-    search_directory             0.032377s             0.010198s             0.014505s
-         move_to_mem             0.002265s             0.000000s             0.001446s
-        remove_block             0.000003s             0.000000s             0.000003s
-             OVERALL             0.034872s             0.010198s             0.016097s
-
-25k:
-           Operation                  Real                 User               System
-               START             0.000254s             0.000000s             0.000085s
-    search_directory             0.107781s             0.000000s             0.086367s
-         move_to_mem             0.045805s             0.003843s             0.029681s
-        remove_block             0.000100s             0.000011s             0.000089s
-             OVERALL             0.153981s             0.003856s             0.116265s
-
-70k:
-           Operation                  Real                 User               System
-               START             0.000164s             0.000000s             0.000088s
-    search_directory             0.226324s             0.009823s             0.177833s
-         move_to_mem             0.098180s             0.000000s             0.072778s
-        remove_block             0.000234s             0.000000s             0.000234s
-             OVERALL             0.324943s             0.009823s             0.250979s
-
-complex:
-           Operation                  Real                 User               System
-               START             0.000169s             0.000000s             0.000087s
-    search_directory             0.008859s             0.000000s             0.002262s
-         move_to_mem             0.000648s             0.000000s             0.000297s
-    search_directory             0.141809s             0.055868s             0.080882s
-         move_to_mem             0.000623s             0.000000s             0.000268s
-    search_directory             0.151382s             0.055722s             0.084695s
-        remove_block             0.000009s             0.000000s             0.000009s
-         move_to_mem             0.001681s             0.000000s             0.000995s
-    search_directory             0.024877s             0.003640s             0.019357s
-        remove_block             0.000004s             0.000000s             0.000004s
-        remove_block             0.000001s             0.000000s             0.000001s
-    search_directory             0.142568s             0.040014s             0.097082s
-         move_to_mem             0.000629s             0.000000s             0.000247s
-             OVERALL             0.473367s             0.155244s             0.286308s
+============ STATIC ============
 
 
-DLA WSPÓŁDZIELONEJ:
+                                         Operation                  Real                 User               System
+                                   create_table 10             0.000004s             0.000000s             0.000006s
+        search_directory /usr/lib/ \*.so file.temp             0.194170s             0.000000s             0.112423s
+                                       move_to_mem             0.002538s             0.000000s             0.001552s
+                                    remove_block 0             0.000005s             0.000000s             0.000005s
+                                             TOTAL             0.197360s             0.000000s             0.114615s
 
-13k:
-           Operation                  Real                 User               System
-               START             0.000167s             0.000000s             0.000087s
-    search_directory             0.032306s             0.009979s             0.014395s
-         move_to_mem             0.002449s             0.000000s             0.001473s
-        remove_block             0.000003s             0.000000s             0.000004s
-             OVERALL             0.034965s             0.009979s             0.016001s
+                                         Operation                  Real                 User               System
+                                   create_table 10             0.000004s             0.000000s             0.000005s
+           search_directory /usr/src/ \* file.temp             0.646105s             0.000000s             0.306854s
+                                       move_to_mem             0.047430s             0.000000s             0.034314s
+                                    remove_block 0             0.000099s             0.000000s             0.000099s
+                                             TOTAL             0.694278s             0.000000s             0.341911s
 
-25k:
-           Operation                  Real                 User               System
-               START             0.000163s             0.000000s             0.000087s
-    search_directory             0.108791s             0.004112s             0.083279s
-         move_to_mem             0.046131s             0.007124s             0.026882s
-        remove_block             0.000097s             0.000019s             0.000077s
-             OVERALL             0.155217s             0.011257s             0.110362s
+                                         Operation                  Real                 User               System
+                                   create_table 10             0.000005s             0.000000s             0.000006s
+               search_directory /usr/ \* file.temp             1.248938s             0.032605s             0.605624s
+                                       move_to_mem             0.099356s             0.000000s             0.073353s
+                                    remove_block 0             0.000181s             0.000000s             0.000181s
+                                             TOTAL             1.349077s             0.032605s             0.679641s
 
-70k:
-           Operation                  Real                 User               System
-               START             0.000168s             0.000000s             0.000087s
-    search_directory             0.229586s             0.000000s             0.187891s
-         move_to_mem             0.100960s             0.000000s             0.074060s
-        remove_block             0.000227s             0.000000s             0.000227s
-             OVERALL             0.330980s             0.000000s             0.262309s
+                                         Operation                  Real                 User               System
+                                   create_table 10             0.000004s             0.000000s             0.000005s
+               search_directory /bin/ \* file.temp             0.009488s             0.000000s             0.004665s
+                                       move_to_mem             0.000829s             0.000000s             0.000310s
+             search_directory /usr dif\* file.temp             1.156107s             0.069162s             0.508296s
+                                       move_to_mem             0.000691s             0.000000s             0.000297s
+           search_directory /usr \*mac\* file.temp             0.150355s             0.059451s             0.080402s
+                                    remove_block 0             0.000003s             0.000000s             0.000003s
+                                       move_to_mem             0.001720s             0.000000s             0.001037s
+           search_directory /usr/lib vim file.temp             0.024643s             0.000000s             0.022747s
+                                    remove_block 0             0.000023s             0.000000s             0.000024s
+                                    remove_block 1             0.000018s             0.000000s             0.000019s
+               search_directory /usr vim file.temp             0.140660s             0.063252s             0.072447s
+                                       move_to_mem             0.000722s             0.000000s             0.000238s
+                                             TOTAL             1.486077s             0.191865s             0.691061s
 
-complex:
-           Operation                  Real                 User               System
-               START             0.000164s             0.000000s             0.000088s
-    search_directory             0.005433s             0.000000s             0.002247s
-         move_to_mem             0.000632s             0.000000s             0.000272s
-    search_directory             0.140319s             0.047351s             0.087868s
-         move_to_mem             0.000615s             0.000000s             0.000267s
-    search_directory             0.150429s             0.028899s             0.110733s
-        remove_block             0.000011s             0.000000s             0.000011s
-         move_to_mem             0.001613s             0.000000s             0.000952s
-    search_directory             0.024074s             0.009253s             0.012686s
-        remove_block             0.000003s             0.000000s             0.000004s
-        remove_block             0.000001s             0.000000s             0.000001s
-    search_directory             0.140701s             0.055358s             0.079920s
-         move_to_mem             0.000630s             0.000000s             0.000242s
-             OVERALL             0.464730s             0.140861s             0.295406s
 
-DLA DYNAMICZNEJ:
+============ SHARED ============
 
-13k:
-           Operation                  Real                 User               System
-               START             0.000209s             0.000000s             0.000108s
-    search_directory             0.033421s             0.012312s             0.013423s
-         move_to_mem             0.002372s             0.000000s             0.001518s
-        remove_block             0.000004s             0.000000s             0.000004s
-             OVERALL             0.036046s             0.012312s             0.015097s
 
-25k:
-           Operation                  Real                 User               System
-               START             0.000193s             0.000000s             0.000115s
-    search_directory             0.109404s             0.006110s             0.080464s
-         move_to_mem             0.046720s             0.000000s             0.034419s
-        remove_block             0.000136s             0.000000s             0.000136s
-             OVERALL             0.156490s             0.006110s             0.115175s
+                                         Operation                  Real                 User               System
+                                   create_table 10             0.000005s             0.000000s             0.000007s
+        search_directory /usr/lib/ \*.so file.temp             0.180301s             0.000000s             0.098203s
+                                       move_to_mem             0.002489s             0.000000s             0.001492s
+                                    remove_block 0             0.000006s             0.000000s             0.000006s
+                                             TOTAL             0.183500s             0.000000s             0.100061s
 
-70k:
-           Operation                  Real                 User               System
-               START             0.000163s             0.000000s             0.000087s
-    search_directory             0.227992s             0.004489s             0.180593s
-         move_to_mem             0.096590s             0.000000s             0.072572s
-        remove_block             0.000234s             0.000000s             0.000234s
-             OVERALL             0.325020s             0.004489s             0.253532s
+                                         Operation                  Real                 User               System
+                                   create_table 10             0.000005s             0.000000s             0.000007s
+           search_directory /usr/src/ \* file.temp             0.641274s             0.000000s             0.310089s
+                                       move_to_mem             0.046172s             0.000000s             0.034202s
+                                    remove_block 0             0.000091s             0.000000s             0.000091s
+                                             TOTAL             0.688222s             0.000000s             0.344818s
 
-complex:
-           Operation                  Real                 User               System
-               START             0.000160s             0.000000s             0.000087s
-    search_directory             0.005527s             0.000000s             0.002263s
-         move_to_mem             0.005653s             0.000000s             0.000301s
-    search_directory             0.141591s             0.031765s             0.104406s
-         move_to_mem             0.000699s             0.000000s             0.000295s
-    search_directory             0.150268s             0.055534s             0.084488s
-        remove_block             0.000014s             0.000000s             0.000014s
-         move_to_mem             0.001760s             0.000000s             0.000953s
-    search_directory             0.024404s             0.012722s             0.009593s
-        remove_block             0.000007s             0.000000s             0.000008s
-        remove_block             0.000001s             0.000000s             0.000002s
-    search_directory             0.141126s             0.027653s             0.107698s
-         move_to_mem             0.000676s             0.000000s             0.000278s
-             OVERALL             0.472011s             0.127674s             0.310524s
+                                         Operation                  Real                 User               System
+                                   create_table 10             0.000005s             0.000000s             0.000006s
+               search_directory /usr/ \* file.temp             1.254551s             0.034367s             0.603844s
+                                       move_to_mem             0.100527s             0.000000s             0.074523s
+                                    remove_block 0             0.000174s             0.000000s             0.000175s
+                                             TOTAL             1.355866s             0.034367s             0.679070s
+
+                                         Operation                  Real                 User               System
+                                   create_table 10             0.000005s             0.000000s             0.000007s
+               search_directory /bin/ \* file.temp             0.010112s             0.000000s             0.005337s
+                                       move_to_mem             0.000646s             0.000000s             0.000285s
+             search_directory /usr dif\* file.temp             1.152898s             0.042970s             0.538300s
+                                       move_to_mem             0.000737s             0.000000s             0.000304s
+           search_directory /usr \*mac\* file.temp             0.151711s             0.032663s             0.107466s
+                                    remove_block 0             0.000011s             0.000000s             0.000010s
+                                       move_to_mem             0.001670s             0.000000s             0.000974s
+           search_directory /usr/lib vim file.temp             0.025054s             0.008609s             0.014145s
+                                    remove_block 0             0.000016s             0.000000s             0.000016s
+                                    remove_block 1             0.000009s             0.000000s             0.000010s
+               search_directory /usr vim file.temp             0.140145s             0.051229s             0.083841s
+                                       move_to_mem             0.000745s             0.000000s             0.000235s
+                                             TOTAL             1.484490s             0.135471s             0.751639s
+
+
+============ DYNAMIC ============
+
+
+                                         Operation                  Real                 User               System
+                                   create_table 10             0.000005s             0.000000s             0.000007s
+        search_directory /usr/lib/ \*.so file.temp             0.189319s             0.024320s             0.076130s
+                                       move_to_mem             0.002487s             0.000000s             0.001497s
+                                    remove_block 0             0.000007s             0.000000s             0.000007s
+                                             TOTAL             0.192508s             0.024320s             0.078234s
+
+                                         Operation                  Real                 User               System
+                                   create_table 10             0.000005s             0.000000s             0.000007s
+           search_directory /usr/src/ \* file.temp             0.640589s             0.000000s             0.310448s
+                                       move_to_mem             0.045784s             0.000000s             0.033788s
+                                    remove_block 0             0.000091s             0.000000s             0.000091s
+                                             TOTAL             0.687142s             0.000000s             0.344914s
+
+                                         Operation                  Real                 User               System
+                                   create_table 10             0.000005s             0.000000s             0.000006s
+               search_directory /usr/ \* file.temp             1.287445s             0.015444s             0.620139s
+                                       move_to_mem             0.100081s             0.000000s             0.074267s
+                                    remove_block 0             0.000280s             0.000000s             0.000279s
+                                             TOTAL             1.388534s             0.015444s             0.695314s
+
+                                         Operation                  Real                 User               System
+                                   create_table 10             0.000005s             0.000000s             0.000006s
+               search_directory /bin/ \* file.temp             0.009315s             0.000000s             0.004686s
+                                       move_to_mem             0.000677s             0.000000s             0.000315s
+             search_directory /usr dif\* file.temp             1.152768s             0.086682s             0.492290s
+                                       move_to_mem             0.000687s             0.000000s             0.000302s
+           search_directory /usr \*mac\* file.temp             0.156554s             0.053296s             0.087384s
+                                    remove_block 0             0.000033s             0.000000s             0.000035s
+                                       move_to_mem             0.002035s             0.000000s             0.001228s
+           search_directory /usr/lib vim file.temp             0.024628s             0.008767s             0.014189s
+                                    remove_block 0             0.000003s             0.000000s             0.000001s
+                                    remove_block 1             0.000002s             0.000000s             0.000002s
+               search_directory /usr vim file.temp             0.139124s             0.039142s             0.095087s
+                                       move_to_mem             0.000748s             0.000000s             0.000241s
+                                             TOTAL             1.487447s             0.187887s             0.696555s

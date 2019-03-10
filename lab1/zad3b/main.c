@@ -112,13 +112,13 @@ void printTimes(const char* operation_name, timeval *u_start, timeval *s_start, 
   suseconds_t systemTime_micro = s_end->tv_usec - s_start->tv_usec;
   double systemTime = (double) systemTime_micro/1000000.0 + s_end->tv_sec - s_start->tv_sec;;
 
-  printf("%20s %20fs %20fs %20fs\n",
+  printf("%50s %20fs %20fs %20fs\n",
          operation_name,
          realTime,
          userTime,
          systemTime);
   fprintf(report_file,
-         "%20s %20fs %20fs %20fs\n",
+         "%50s %20fs %20fs %20fs\n",
          operation_name,
          realTime,
          userTime,
@@ -185,6 +185,7 @@ void parseArgs(mylib_block_array *arr, uint32_t count, char** operations){
   for(uint32_t i = 0; i < count; i++){
 
     char* operation = operations[i];
+    char* operation_display = calloc(50, sizeof(char));
 
     //Save time before operation
     measureTimes(utime_operation_start, stime_operation_start, rtime_operation_start);
@@ -197,11 +198,14 @@ void parseArgs(mylib_block_array *arr, uint32_t count, char** operations){
       }
 
       search_directory(operations[i+1], operations[i+2], operations[i+3]);
+      sprintf(operation_display, "search_directory %s %s %s", operations[i+1], operations[i+2], operations[i+3]);
+
       i += 3; // search_directory takes three args
 
     } else if(strcmp("move_to_mem", operation) == 0){
 
       move_to_memory(arr);
+      sprintf(operation_display, "move_to_mem");
 
     } else if(strcmp("remove_block", operation) == 0){
 
@@ -212,6 +216,8 @@ void parseArgs(mylib_block_array *arr, uint32_t count, char** operations){
 
       int block_idx = strtol(operations[i+1], NULL, 10);
       remove_block(arr, block_idx);
+      sprintf(operation_display, "remove_block %i", block_idx);
+
       i += 1; // remove_block takes one arg
 
     }else{
@@ -222,7 +228,8 @@ void parseArgs(mylib_block_array *arr, uint32_t count, char** operations){
     }
 
     // Print times of single operation
-    printTimes(operation, utime_operation_start, stime_operation_start, rtime_operation_start);
+    printTimes(operation_display, utime_operation_start, stime_operation_start, rtime_operation_start);
+    free(operation_display);
   }
 }
 
@@ -266,20 +273,25 @@ int main(int argc, char **argv){
     printUsageAndExit();
   }
 
-  mylib_block_array *arr = mylib_InitArray(array_size);
+  // Print headers
+  printf("%50s  %20s %20s %20s\n", "Operation", "Real", "User", "System");
+  fprintf(report_file, "%50s  %20s %20s %20s\n", "Operation", "Real", "User", "System");
 
-  // Load up execution_start tirmes
+  // Load up execution_start times
   measureTimes(utime_execution_start, stime_execution_start, rtime_execution_start);
 
-  printf("%20s  %20s %20s %20s\n", "Operation", "Real", "User", "System");
-  fprintf(report_file, "%20s  %20s %20s %20s\n", "Operation", "Real", "User", "System");
-  printTimes("START", utime_execution_start, stime_execution_start, rtime_execution_start);
+  mylib_block_array *arr = mylib_InitArray(array_size);
+
+  char* buff = calloc(50, sizeof(char));
+  sprintf(buff, "create_table %i", array_size);
+  printTimes(buff, utime_execution_start, stime_execution_start, rtime_execution_start);
+  free(buff);
 
   // Parse and execute arguments operations
   parseArgs(arr, argc - 2, argv+2);
 
   // Print elapsed tiems since execution
-  printTimes("OVERALL", utime_execution_start, stime_execution_start, rtime_execution_start);
+  printTimes("TOTAL", utime_execution_start, stime_execution_start, rtime_execution_start);
 
   // Release taken memory
   mylib_DisposeArray(arr);
