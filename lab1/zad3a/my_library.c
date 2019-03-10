@@ -42,8 +42,10 @@ int8_t mylib_PerformFind(){
   command_buffer = calloc(command_length, sizeof(char));
   sprintf(command_buffer, "find %s -name %s > %s", lookup_dir, lookup_filter, temp_filename);
 
-  if(system(command_buffer) < 0) return -3;
+  int8_t result = system(command_buffer);
+  free(command_buffer);
 
+  if(result < 0) return -3;
   return 0;
 }
 
