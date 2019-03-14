@@ -1,6 +1,6 @@
-Czasy operacji kopiowania rosnie proporcjonalnie do ilosci danych do przeniesienia w obu przypadkach. Jednak to funkcjie bibliotecznie sa wydajniejsze dla tej operacji. Powodem tego moze byc to, ze fread/fwrite korzysta z wewnetrznych buforow, ktore poprawiaja wydajnosc.
+Czasy operacji kopiowania rośnie proporcjonalnie do ilości danych do przeniesienia w obu przypadkach. W ogólności to funkcje biblioteczne dają lepszcze czasy. Powodem tego może byc to, że fread/fwrite korzysta z wewnętrznych buforów, które poprawiają wydajność.
 
-Przy operacjach na malej wielkosci rekordach funkcje systemowe sa szybsze niz funkcje biblioteczne. Natomias wraz ze wzrostem wielkosci i ilosci rekordow obserwujemy przyspieszenie funkcji bibliotecznych wzgledem systemowych. Takie opoznienie wynika z pewnego narzutu zwiazanego z buforowaniem i innymi wewnetrznymi mechanizmami biblioteki.
+Przy operacjach na małej wielkości rekordach funkcje systemowe są szybsze niż funkcje biblioteczne. Natomiast wraz ze wzrostem wielkości i ilości rekordów obserwujemy przyspieszenie funkcji bibliotecznych względem systemowych. Takie opóznienie wynika z pewnego narzutu związanego z buforowaniem i innymi wewnętrznymi mechanizmami biblioteki.
 
 
 ============== COPY LIB Record Size=1, Record Count=400 ==============
