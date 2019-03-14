@@ -12,11 +12,11 @@
 #include <time.h>
 #include <errno.h>
 #include <ftw.h>
+#include <libgen.h>
 
 typedef struct dirent dirent;
 
 // Globals
-const char *path;
 uint8_t operator;
 time_t timestamp;
 
@@ -95,7 +95,26 @@ int printEntry(const char* path, const struct stat *fileinfo,
   time_t last_access;
   time_t last_update;
 
-  absolute_path = realpath(path, NULL);
+  if(f_type_id == FTW_SL || f_type_id == FTW_SLN){
+    char *path_cpy = calloc(strlen(path) + 1, sizeof(char));
+    strcpy(path_cpy, path);
+
+    char *base_name  = basename(path_cpy);
+    char *parent_dir = dirname(path_cpy);
+
+    absolute_path = calloc(PATH_MAX + 1, sizeof(char));
+
+    char *full_path = realpath(parent_dir, NULL);
+    strcpy(absolute_path, full_path);
+    strcat(absolute_path, "/");
+    strcat(absolute_path, base_name);
+
+    free(full_path);
+    free(path_cpy);
+  } else {
+    absolute_path = (char *) realpath(path, NULL);
+  }
+
   file_type = fileTypeToString(f_type_id);
 
   file_size = fileinfo->st_size;
@@ -123,13 +142,12 @@ int printEntry(const char* path, const struct stat *fileinfo,
 int main(int argc, char **argv){
   if (argc != 4) printUsageAndExit();
 
-
   uint32_t len = strlen(argv[1]);
   if(argv[1][len-1] == '/'){
     argv[1][len-1] = 0;
   }
 
-  path = argv[1];
+  const char *path = argv[1];
   operator = parseOperator(argv[2]);
   timestamp = parseDate(argv[3]);
 

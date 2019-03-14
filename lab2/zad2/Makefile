@@ -4,6 +4,8 @@
 # $< ==> lib.c
 # $^ ==> lib.c main.c
 
+SHELL = /bin/bash
+
 CC = gcc -Wall -pedantic -std=gnu11
 TEST_DIR = test_dir
 NAME_1 = variant_1
@@ -34,4 +36,14 @@ generate_test_directory:
 
 	for number in 1 2 3 4 5 6 7 8 9 10; do \
 		touch $(TEST_DIR)/$$number.txt ; \
+		mkdir $(TEST_DIR)/$$number ; \
+	done
+
+	num1=1 ; while [[ $$num1 -le 10 ]] ; do \
+		num2=1 ; while [[ $$num2 -le 5 ]] ; do \
+			touch $(TEST_DIR)/$$num1/$$num2.txt ; \
+			ln -s  $(TEST_DIR)/$$num1.txt  $(TEST_DIR)/$$num1/$$num2.link ; \
+			((num2 = num2 + 1)) ; \
+		done ; \
+		((num1 = num1 + 1)) ; \
 	done

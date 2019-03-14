@@ -4,6 +4,7 @@
 #include <limits.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 #include <string.h>
 #include <stdint.h>
 #include <sys/types.h>
@@ -107,12 +108,22 @@ void traverseDirectory(const char* path, uint8_t operator, time_t timestamp){
     char *filename = entry->d_name;
     char *newPath = calloc(PATH_MAX + 1, sizeof(char));
     sprintf(newPath, "%s/%s", path, filename);
-    absolute_path = (char *) realpath(newPath, NULL);
+
+    if(entry->d_type == DT_LNK){
+      char *parent_dir = realpath(path, NULL);
+      absolute_path = calloc(PATH_MAX + 1, sizeof(char));
+      strcpy(absolute_path, parent_dir);
+      free(parent_dir);
+      strcat(absolute_path, "/");
+      strcat(absolute_path, entry->d_name);
+    } else {
+      absolute_path = (char *) realpath(newPath, NULL);
+    }
 
     unsigned char f_type_id = entry->d_type;
     file_type = fileTypeToString(f_type_id);
 
-    if(stat(absolute_path, &fileinfo) < 0){
+    if(lstat(absolute_path, &fileinfo) < 0){
       printf("ERROR: %s\n", strerror(errno));
       free(newPath);
       free(absolute_path);
