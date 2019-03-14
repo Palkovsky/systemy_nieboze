@@ -88,8 +88,7 @@ void traverseDirectory(const char* path, uint8_t operator, time_t timestamp){
 
   DIR* dir = opendir(path);
   if(!dir){
-    //printf("Invalid directory path!\n");
-    //exit(2);
+    printf("Invalid directory path: '%s'. Backing up...\n", path);
     return;
   }
 
@@ -143,6 +142,11 @@ void traverseDirectory(const char* path, uint8_t operator, time_t timestamp){
     free(absolute_path);
     free(last_access_str);
     free(last_update_str);
+  }
+
+
+  if(errno < 0){
+    printf("ERROR: %s\n", strerror(errno));
   }
 
   closedir(dir);
