@@ -3,10 +3,14 @@
 #include <string.h>
 #include <stdint.h>
 #include <unistd.h>
-#include <fcntl.h> 
+#include <fcntl.h>
+#include <sys/times.h>
 
+// Defines
 #define UNRECOGNIZABLE_CMD "Unrecognizable command!"
 #define INVALID_ARGS       "Invalid arguments!"
+
+typedef struct tms tms;
 
 // =============== Utility Helper Functions ==================
 
@@ -34,6 +38,15 @@ uint8_t parseMethod(const char* method){
   }
   if(strcmp(method, "lib") == 0) return 1;
   return 0;
+}
+
+tms* getTimes(){
+  tms *buff = calloc(1, sizeof(tms));
+  if(times(buff) < 0){
+    printf("Error when accessing clock!\n");
+    exit(3);
+  }
+  return buff;
 }
 
 // =============== Core Functionality  ==================
@@ -202,8 +215,11 @@ void parseArgs(int size, char **args){
   if(size == 0) printUsageAndExit(UNRECOGNIZABLE_CMD);
   size--;
 
-  const char* command =  *args;
+  tms *start_time;
+  tms *end_time;
+  start_time = getTimes();
 
+  const char* command =  *args;
   if(strcmp(command, "generate") == 0){
     if(size != 3) printUsageAndExit(INVALID_ARGS); // wrong number of parameters
 
@@ -234,6 +250,21 @@ void parseArgs(int size, char **args){
   }else {
     printUsageAndExit(UNRECOGNIZABLE_CMD);
   }
+
+  end_time = getTimes();
+
+  clock_t user_ticks = (end_time->tms_utime - start_time->tms_utime) +
+                        (end_time->tms_cutime - start_time->tms_cutime);
+  clock_t system_ticks = (end_time->tms_stime - start_time->tms_stime) +
+                          (end_time->tms_cstime - start_time->tms_cstime);
+  double user_seconds = (double) user_ticks / sysconf(_SC_CLK_TCK);
+  double system_seconds = (double) system_ticks / sysconf(_SC_CLK_TCK);
+
+  printf("%20s %20s", "USER", "SYSTEM\n");
+  printf("%20lfs %20lfs\n", user_seconds, system_seconds);
+
+  free(start_time);
+  free(end_time);
 }
 
 int main(int argc, char **argv){

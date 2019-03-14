@@ -1,0 +1,244 @@
+Czasy operacji kopiowania rosnie proporcjonalnie do ilosci danych do przeniesienia w obu przypadkach. Jednak to funkcjie bibliotecznie sa wydajniejsze dla tej operacji. Powodem tego moze byc to, ze fread/fwrite korzysta z wewnetrznych buforow, ktore poprawiaja wydajnosc.
+
+Przy operacjach na malej wielkosci rekordach funkcje systemowe sa szybsze niz funkcje biblioteczne. Natomias wraz ze wzrostem wielkosci i ilosci rekordow obserwujemy przyspieszenie funkcji bibliotecznych wzgledem systemowych. Takie opoznienie wynika z pewnego narzutu zwiazanego z buforowaniem i innymi wewnetrznymi mechanizmami biblioteki.
+
+
+============== COPY LIB Record Size=1, Record Count=400 ==============
+                USER              SYSTEM
+            0.000000s             0.000000s
+
+
+============== COPY SYS Record Size=1, Record Count=400 ==============
+                USER              SYSTEM
+            0.000000s             0.060000s
+
+
+============== SORT LIB Record Size=1, Record Count=400 ==============
+                USER              SYSTEM
+            0.000000s             5.410000s
+
+
+============== SORT SYS Record Size=1, Record Count=400 ==============
+                USER              SYSTEM
+            0.000000s             5.350000s
+
+
+============== COPY LIB Record Size=1, Record Count=800 ==============
+                USER              SYSTEM
+            0.000000s             0.000000s
+
+
+============== COPY SYS Record Size=1, Record Count=800 ==============
+                USER              SYSTEM
+            0.000000s             0.110000s
+
+
+============== SORT LIB Record Size=1, Record Count=800 ==============
+                USER              SYSTEM
+            0.000000s            21.670000s
+
+
+============== SORT SYS Record Size=1, Record Count=800 ==============
+                USER              SYSTEM
+            0.000000s            21.280000s
+
+
+============== COPY LIB Record Size=4, Record Count=400 ==============
+                USER              SYSTEM
+            0.000000s             0.000000s
+
+
+============== COPY SYS Record Size=4, Record Count=400 ==============
+                USER              SYSTEM
+            0.000000s             0.060000s
+
+
+============== SORT LIB Record Size=4, Record Count=400 ==============
+                USER              SYSTEM
+            0.000000s             5.820000s
+
+
+============== SORT SYS Record Size=4, Record Count=400 ==============
+                USER              SYSTEM
+            0.000000s             5.760000s
+
+
+============== COPY LIB Record Size=4, Record Count=800 ==============
+                USER              SYSTEM
+            0.000000s             0.000000s
+
+
+============== COPY SYS Record Size=4, Record Count=800 ==============
+                USER              SYSTEM
+            0.000000s             0.110000s
+
+
+============== SORT LIB Record Size=4, Record Count=800 ==============
+                USER              SYSTEM
+            0.000000s            21.390000s
+
+
+============== SORT SYS Record Size=4, Record Count=800 ==============
+                USER              SYSTEM
+            0.020000s            21.920000s
+
+
+============== COPY LIB Record Size=512, Record Count=400 ==============
+                USER              SYSTEM
+            0.000000s             0.010000s
+
+
+============== COPY SYS Record Size=512, Record Count=400 ==============
+                USER              SYSTEM
+            0.000000s             0.070000s
+
+
+============== SORT LIB Record Size=512, Record Count=400 ==============
+                USER              SYSTEM
+            0.050000s             7.850000s
+
+
+============== SORT SYS Record Size=512, Record Count=400 ==============
+                USER              SYSTEM
+            0.050000s             7.970000s
+
+
+============== COPY LIB Record Size=512, Record Count=800 ==============
+                USER              SYSTEM
+            0.000000s             0.020000s
+
+
+============== COPY SYS Record Size=512, Record Count=800 ==============
+                USER              SYSTEM
+            0.000000s             0.130000s
+
+
+============== SORT LIB Record Size=512, Record Count=800 ==============
+                USER              SYSTEM
+            0.340000s            33.100000s
+
+
+============== SORT SYS Record Size=512, Record Count=800 ==============
+                USER              SYSTEM
+            0.220000s            30.460000s
+
+
+============== COPY LIB Record Size=1024, Record Count=400 ==============
+                USER              SYSTEM
+            0.000000s             0.020000s
+
+
+============== COPY SYS Record Size=1024, Record Count=400 ==============
+                USER              SYSTEM
+            0.000000s             0.070000s
+
+
+============== SORT LIB Record Size=1024, Record Count=400 ==============
+                USER              SYSTEM
+            0.040000s             7.890000s
+
+
+============== SORT SYS Record Size=1024, Record Count=400 ==============
+                USER              SYSTEM
+            0.030000s             7.230000s
+
+
+============== COPY LIB Record Size=1024, Record Count=800 ==============
+                USER              SYSTEM
+            0.000000s             0.030000s
+
+
+============== COPY SYS Record Size=1024, Record Count=800 ==============
+                USER              SYSTEM
+            0.000000s             0.130000s
+
+
+============== SORT LIB Record Size=1024, Record Count=800 ==============
+                USER              SYSTEM
+            0.380000s            30.560000s
+
+
+============== SORT SYS Record Size=1024, Record Count=800 ==============
+                USER              SYSTEM
+            0.230000s            30.010000s
+
+
+============== COPY LIB Record Size=4096, Record Count=400 ==============
+                USER              SYSTEM
+            0.000000s             0.070000s
+
+
+============== COPY SYS Record Size=4096, Record Count=400 ==============
+                USER              SYSTEM
+            0.000000s             0.070000s
+
+
+============== SORT LIB Record Size=4096, Record Count=400 ==============
+                USER              SYSTEM
+            0.080000s             7.810000s
+
+
+============== SORT SYS Record Size=4096, Record Count=400 ==============
+                USER              SYSTEM
+            0.060000s             7.660000s
+
+
+============== COPY LIB Record Size=4096, Record Count=800 ==============
+                USER              SYSTEM
+            0.000000s             0.160000s
+
+
+============== COPY SYS Record Size=4096, Record Count=800 ==============
+                USER              SYSTEM
+            0.000000s             0.220000s
+
+
+============== SORT LIB Record Size=4096, Record Count=800 ==============
+                USER              SYSTEM
+            0.290000s            29.620000s
+
+
+============== SORT SYS Record Size=4096, Record Count=800 ==============
+                USER              SYSTEM
+            0.330000s            36.280000s
+
+
+============== COPY LIB Record Size=8192, Record Count=400 ==============
+                USER              SYSTEM
+            0.010000s             0.130000s
+
+
+============== COPY SYS Record Size=8192, Record Count=400 ==============
+                USER              SYSTEM
+            0.000000s             0.060000s
+
+
+============== SORT LIB Record Size=8192, Record Count=400 ==============
+                USER              SYSTEM
+            0.080000s             7.970000s
+
+
+============== SORT SYS Record Size=8192, Record Count=400 ==============
+                USER              SYSTEM
+            0.060000s             7.750000s
+
+
+============== COPY LIB Record Size=8192, Record Count=800 ==============
+                USER              SYSTEM
+            0.000000s             0.240000s
+
+
+============== COPY SYS Record Size=8192, Record Count=800 ==============
+                USER              SYSTEM
+            0.000000s             0.140000s
+
+
+============== SORT LIB Record Size=8192, Record Count=800 ==============
+                USER              SYSTEM
+            0.380000s            31.460000s
+
+
+============== SORT SYS Record Size=8192, Record Count=800 ==============
+                USER              SYSTEM
+            0.140000s            31.910000s
+
