@@ -6,15 +6,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
-#include <sys/types.h>
-#include <dirent.h>
-#include <sys/stat.h>
 #include <time.h>
-#include <errno.h>
 #include <ftw.h>
 #include <libgen.h>
-
-typedef struct dirent dirent;
 
 // Globals
 uint8_t operator;
@@ -52,6 +46,12 @@ time_t parseDate(const char* datetime){
   return timestamp;
 }
 
+char *timestampToString(time_t time){
+  char *buff = calloc(50, sizeof(char));
+  strftime(buff, 50, "%d.%m.%Y-%H:%M:%S", localtime(&time));
+  return buff;
+}
+
 char* fileTypeToString(unsigned char id){
   switch(id){
   case FTW_F:
@@ -79,16 +79,7 @@ int8_t shouldPrint(time_t op1, uint8_t operator, time_t op2){
   return 0;
 }
 
-char *timestampToString(time_t time){
-  char *buff = calloc(50, sizeof(char));
-  strftime(buff, 50, "%d.%m.%Y-%H:%M:%S", localtime(&time));
-  return buff;
-}
-
-int printEntry(const char* path, const struct stat *fileinfo,
-               int f_type_id, struct FTW *ftwbuf)
-{
-
+int printEntry(const char* path, const struct stat *fileinfo, int f_type_id, struct FTW *ftwbuf) {
   char *absolute_path;
   char *file_type;
   uint64_t file_size;
@@ -101,10 +92,9 @@ int printEntry(const char* path, const struct stat *fileinfo,
 
     char *base_name  = basename(path_cpy);
     char *parent_dir = dirname(path_cpy);
+    char *full_path = realpath(parent_dir, NULL);
 
     absolute_path = calloc(PATH_MAX + 1, sizeof(char));
-
-    char *full_path = realpath(parent_dir, NULL);
     strcpy(absolute_path, full_path);
     strcat(absolute_path, "/");
     strcat(absolute_path, base_name);

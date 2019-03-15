@@ -42,7 +42,7 @@ generate_test_directory:
 	num1=1 ; while [[ $$num1 -le 10 ]] ; do \
 		num2=1 ; while [[ $$num2 -le 5 ]] ; do \
 			touch $(TEST_DIR)/$$num1/$$num2.txt ; \
-			ln -s  $(TEST_DIR)/$$num1.txt  $(TEST_DIR)/$$num1/$$num2.link ; \
+			ln -s  $(TEST_DIR)/$$num1  $(TEST_DIR)/$$num1/$$num2.link ; \
 			((num2 = num2 + 1)) ; \
 		done ; \
 		((num1 = num1 + 1)) ; \

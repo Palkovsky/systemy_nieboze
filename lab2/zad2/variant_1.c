@@ -4,10 +4,8 @@
 #include <limits.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <unistd.h>
 #include <string.h>
 #include <stdint.h>
-#include <sys/types.h>
 #include <dirent.h>
 #include <sys/stat.h>
 #include <time.h>
@@ -47,6 +45,12 @@ time_t parseDate(const char* datetime){
   return timestamp;
 }
 
+char *timeToString(time_t time){
+  char *buff = calloc(50, sizeof(char));
+  strftime(buff, 50, "%d.%m.%Y-%H:%M:%S", localtime(&time));
+  return buff;
+}
+
 char* fileTypeToString(unsigned char id){
   switch(id){
   case DT_REG:
@@ -78,22 +82,17 @@ int8_t shouldPrint(time_t op1, uint8_t operator, time_t op2){
   return 0;
 }
 
-char *timestampToString(time_t time){
-  char *buff = calloc(50, sizeof(char));
-  strftime(buff, 50, "%d.%m.%Y-%H:%M:%S", localtime(&time));
-  return buff;
-}
-
 void traverseDirectory(const char* path, uint8_t operator, time_t timestamp){
   dirent *entry = NULL;
+  struct stat fileinfo;
+  DIR* dir;
 
-  DIR* dir = opendir(path);
+  dir = opendir(path);
   if(!dir){
     printf("Invalid directory path: '%s'. Backing up...\n", path);
     return;
   }
 
-  struct stat fileinfo;
 
   while((entry = readdir(dir)) != NULL){
     if(strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
@@ -106,18 +105,18 @@ void traverseDirectory(const char* path, uint8_t operator, time_t timestamp){
     time_t last_update;
 
     char *filename = entry->d_name;
-    char *newPath = calloc(PATH_MAX + 1, sizeof(char));
-    sprintf(newPath, "%s/%s", path, filename);
+    char *new_path = calloc(PATH_MAX + 1, sizeof(char));
+    sprintf(new_path, "%s/%s", path, filename);
 
     if(entry->d_type == DT_LNK){
       char *parent_dir = realpath(path, NULL);
       absolute_path = calloc(PATH_MAX + 1, sizeof(char));
       strcpy(absolute_path, parent_dir);
-      free(parent_dir);
       strcat(absolute_path, "/");
       strcat(absolute_path, entry->d_name);
+      free(parent_dir);
     } else {
-      absolute_path = (char *) realpath(newPath, NULL);
+      absolute_path = (char *) realpath(new_path, NULL);
     }
 
     unsigned char f_type_id = entry->d_type;
@@ -125,7 +124,7 @@ void traverseDirectory(const char* path, uint8_t operator, time_t timestamp){
 
     if(lstat(absolute_path, &fileinfo) < 0){
       printf("ERROR: %s\n", strerror(errno));
-      free(newPath);
+      free(new_path);
       free(absolute_path);
       continue;
     }
@@ -133,8 +132,8 @@ void traverseDirectory(const char* path, uint8_t operator, time_t timestamp){
     file_size = fileinfo.st_size;
     last_access = fileinfo.st_atime;
     last_update = fileinfo.st_mtime;
-    char* last_access_str = timestampToString(last_access);
-    char* last_update_str = timestampToString(last_update);
+    char* last_access_str = timeToString(last_access);
+    char* last_update_str = timeToString(last_update);
 
     if(shouldPrint(last_update, operator, timestamp) == 1){
       printf("%s | %s | %lu bytes | %s | %s\n",
@@ -146,10 +145,10 @@ void traverseDirectory(const char* path, uint8_t operator, time_t timestamp){
     }
 
     if(f_type_id == DT_DIR && f_type_id != DT_LNK){
-      traverseDirectory(newPath, operator, timestamp);
+      traverseDirectory(new_path, operator, timestamp);
     }
 
-    free(newPath);
+    free(new_path);
     free(absolute_path);
     free(last_access_str);
     free(last_update_str);
@@ -159,15 +158,11 @@ void traverseDirectory(const char* path, uint8_t operator, time_t timestamp){
   if(errno < 0){
     printf("ERROR: %s\n", strerror(errno));
   }
-
   closedir(dir);
-
-  return;
 }
 
 int main(int argc, char **argv){
   if (argc != 4) printUsageAndExit();
-
 
   uint32_t len = strlen(argv[1]);
   if(argv[1][len-1] == '/'){
