@@ -1,6 +1,6 @@
-Czasy operacji kopiowania rośnie proporcjonalnie do ilości danych do przeniesienia w obu przypadkach. W ogólności to funkcje biblioteczne dają lepszcze czasy. Powodem tego może byc to, że fread/fwrite korzysta z wewnętrznych buforów, które poprawiają wydajność.
+Czasy operacji kopiowania rosną proporcjonalnie do ilości danych do przeniesienia zarówno w przypadku funkcji systemowych i bibliotecznkych. W ogólności jednak to funkcje biblioteczne dają lepszcze czasy. Powodem tego może byc to, że fread/fwrite korzysta z wewnętrznych buforów, które poprawiają wydajność.
 
-Przy operacjach na małej wielkości rekordach funkcje systemowe są szybsze niż funkcje biblioteczne. Natomiast wraz ze wzrostem wielkości i ilości rekordów obserwujemy przyspieszenie funkcji bibliotecznych względem systemowych. Takie opóznienie wynika z pewnego narzutu związanego z buforowaniem i innymi wewnętrznymi mechanizmami biblioteki.
+W przypadku srotowania przy operacjach na małej wielkości rekordach funkcje systemowe są szybsze niż funkcje biblioteczne. Natomiast wraz ze wzrostem wielkości i ilości rekordów obserwujemy przyspieszenie funkcji bibliotecznych względem systemowych. Takie zachowanie wynika z pewnego narzutu związnaego z wewnętrznym buforowaniem funkcji bibliotecznych.
 
 Spowolnienie funkcji bibliotecznych może też być skutkiem nie-sekwencyjnego dostępu do danych w pliku. Użycie fseek może zmuszać bibliotekę do załadowania nadmiarowych danych do bufora, których nie użyjemy.
 
