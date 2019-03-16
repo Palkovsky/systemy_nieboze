@@ -15,7 +15,7 @@ typedef struct dirent dirent;
 
 void printUsageAndExit(){
   printf("Invalid parameters! USAGE:\n");
-  printf("main.out [directory] [<, =, >] [DD:MM:YYYY-HH:MM:SS]\n");
+  printf("main.out [directory] [<, =, >] [DD.MM.YYYY-HH:MM:SS]\n");
   exit(1);
 }
 
@@ -93,7 +93,6 @@ void traverseDirectory(const char* path, uint8_t operator, time_t timestamp){
     return;
   }
 
-
   while((entry = readdir(dir)) != NULL){
     if(strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
       continue;
@@ -154,10 +153,6 @@ void traverseDirectory(const char* path, uint8_t operator, time_t timestamp){
     free(last_update_str);
   }
 
-
-  if(errno < 0){
-    printf("ERROR: %s\n", strerror(errno));
-  }
   closedir(dir);
 }
 

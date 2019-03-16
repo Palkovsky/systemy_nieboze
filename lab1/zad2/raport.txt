@@ -1,0 +1,5 @@
+                                         Operation                  Real                 User               System
+                               create_table 100000             0.000008s             0.000000s             0.000010s
+               search_directory /usr/ \* file.temp             0.238862s             0.008994s             0.190080s
+                                       move_to_mem             0.103305s             0.000000s             0.076201s
+                                             TOTAL             0.342985s             0.008994s             0.266378s

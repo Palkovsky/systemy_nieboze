@@ -16,7 +16,7 @@ time_t timestamp;
 
 void printUsageAndExit(){
   printf("Invalid parameters! USAGE:\n");
-  printf("main.out [directory] [<, =, >] [DD:MM:YYYY-HH:MM:SS]\n");
+  printf("main.out [directory] [<, =, >] [DD.MM.YYYY-HH:MM:SS]\n");
   exit(1);
 }
 
