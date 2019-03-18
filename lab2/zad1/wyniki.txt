@@ -1,3 +1,8 @@
+Czasy kopiowania za pomocą funkcji biblitecznych są bardzo szybkie niezależnie od wielkości bufora. Wynika to z wewnętrznego mechanizmu buforowania oferowanego przez bibliotekę. Czasy kopiowania za pomocą funkcji systemowych przy małym buforze są ogromne, lecz wraz ze wzrostem jego wielkości zrównuja się z czasami biblioteki.
+
+W przypadku sortowania to funkcje systemowe okazują się szybsze. Powodem tego jest to, że funkcje systemowe w przeciwieństwie do bibliotecznych nie próbują buforować nadmiarowej ilości danych.
+
+
 ============== COPY LIB Buffer Size=1, Bytes=500000 ==============
                 USER              SYSTEM
             0.000000s             0.030000s
