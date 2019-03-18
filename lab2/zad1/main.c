@@ -18,7 +18,7 @@ void printUsageAndExit(const char* err){
   printf("%s USAGE:\n", err);
   printf("generate [target_file] [record_count] [record_size]\n");
   printf("sort [file] [record_count] [record_size] [lib/sys]\n");
-  printf("copy [src_file] [target_file] [record_count] [record_size] [lib/sys]\n");
+  printf("copy [src_file] [target_file] [records] [buff_size] [lib/sys]\n");
   exit(1);
 }
 
@@ -80,134 +80,148 @@ void generate(const char* path, uint64_t count, uint64_t size){
   fclose(random);
 }
 
-void sort(const char* path, uint64_t count, uint64_t size, uint8_t method){
+void lib_sort(const char* path, uint64_t count, uint64_t size){
   void *buff1 = calloc(size, 1);
   void *buff2 = calloc(size, 1);
 
-  if(method == 1){ //lib
-    FILE *file = fopen(path, "r+");
-    if(!file){
-      printf("Unable to open specfied file!\n");
-      exit(2);
-    }
-
-    for(int64_t i = 1; i < count; i++){
-      fseek(file, i*size, 0);
-      fread(buff1, 1, size, file);
-      unsigned char key1 = *((unsigned char *)buff1);
-
-      int64_t j = i-1;
-      while(j >= 0){
-        fseek(file, j*size, 0);
-        fread(buff2, 1, size, file);
-        unsigned char key2 = *((unsigned char *)buff2);
-
-        if(key2 > key1){
-          fseek(file, (j+1)*size, 0);
-          fwrite(buff2, 1, size, file);
-          j--;
-        } else break;
-      }
-
-      fseek(file, (j+1)*size, 0);
-      fwrite(buff1, 1, size, file);
-    }
-
-    fclose(file);
-  } else { //sys
-    int file = open(path, O_RDWR);
-    if(file < 0){
-      printf("Unable to open specfied file!\n");
-      exit(2);
-    }
-
-    for(int64_t i = 1; i < count; i++){
-      lseek(file, i*size, SEEK_SET);
-      read(file, buff1, size);
-      unsigned char key1 = *((unsigned char *)buff1);
-
-      int64_t j = i-1;
-      while(j >= 0){
-        lseek(file, j*size, SEEK_SET);
-        read(file, buff2, size);
-        unsigned char key2 = *((unsigned char *)buff2);
-
-        if(key2 > key1){
-          lseek(file, (j+1)*size, SEEK_SET);
-          write(file, buff2, size);
-          j--;
-        } else break;
-      }
-
-      lseek(file, (j+1)*size, SEEK_SET);
-      write(file, buff1, size);
-    }
-
-    close(file);
+  FILE *file = fopen(path, "r+");
+  if(!file){
+    printf("Unable to open specfied file!\n");
+    exit(2);
   }
 
+  for(int64_t i = 1; i < count; i++){
+    fseek(file, i*size, 0);
+    fread(buff1, 1, size, file);
+    unsigned char key1 = *((unsigned char *)buff1);
+
+    int64_t j = i-1;
+    while(j >= 0){
+      fseek(file, j*size, 0);
+      fread(buff2, 1, size, file);
+      unsigned char key2 = *((unsigned char *)buff2);
+
+      if(key2 > key1){
+        fseek(file, (j+1)*size, 0);
+        fwrite(buff2, 1, size, file);
+        j--;
+      } else break;
+    }
+
+    fseek(file, (j+1)*size, 0);
+    fwrite(buff1, 1, size, file);
+  }
+
+  fclose(file);
   free(buff1);
   free(buff2);
 }
 
-void copy(const char* in_path, const char* out_path, uint64_t count, uint64_t buf_size, uint8_t method){
-  void *buffer = calloc(buf_size, 1);
+void sys_sort(const char* path, uint64_t count, uint64_t size){
+  void *buff1 = calloc(size, 1);
+  void *buff2 = calloc(size, 1);
 
-  if(method == 1){ // lib
-    FILE *file_in  = fopen(in_path, "r");
-    FILE *file_out = fopen(out_path, "w");
-    if(!file_in || !file_out){
-      printf("Unable to acquire descriptors of passed files!\n");
-      exit(2);
-    }
-
-    while(count-- > 0){
-      size_t bytes_read = fread(buffer, 1, buf_size, file_in);
-      if(bytes_read < 0) {
-        printf("Error reading from input file!\n");
-        exit(2);
-      }
-
-      if(fwrite(buffer, 1, bytes_read, file_out) < 0){
-        printf("Errow writing to target file!\n");
-        exit(2);
-      }
-
-      if(bytes_read < buf_size) break;
-    }
-
-    fclose(file_in);
-    fclose(file_out);
-  } else { // sys
-    int desc_in  = open(in_path, O_RDONLY);
-    int desc_out = open(out_path, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR|S_IWUSR);
-
-    if(desc_in < 0 || desc_out < 0){
-      printf("Unable to acquire descriptors of passed files!\n");
-      exit(2);
-    }
-
-    while(count-- > 0){
-      int bytes_read = read(desc_in, buffer, buf_size);
-
-      if(bytes_read < 0){
-        printf("Unable to read from input file!\n");
-        exit(2);
-      }
-
-      if(bytes_read == 0) break;
-
-      if(write(desc_out, buffer, buf_size) < 0){
-        printf("Error while writing to output file!\n");
-        exit(2);
-      }
-    }
-
-    close(desc_in);
-    close(desc_out);
+  int file = open(path, O_RDWR);
+  if(file < 0){
+    printf("Unable to open specfied file!\n");
+    exit(2);
   }
 
+  for(int64_t i = 1; i < count; i++){
+    lseek(file, i*size, SEEK_SET);
+    read(file, buff1, size);
+    unsigned char key1 = *((unsigned char *)buff1);
+
+    int64_t j = i-1;
+    while(j >= 0){
+      lseek(file, j*size, SEEK_SET);
+      read(file, buff2, size);
+      unsigned char key2 = *((unsigned char *)buff2);
+
+      if(key2 > key1){
+        lseek(file, (j+1)*size, SEEK_SET);
+        write(file, buff2, size);
+        j--;
+      } else break;
+    }
+
+    lseek(file, (j+1)*size, SEEK_SET);
+    write(file, buff1, size);
+  }
+
+  close(file);
+  free(buff1);
+  free(buff2);
+}
+
+void lib_copy(const char* in_path, const char* out_path, uint64_t count, uint64_t buf_size){
+  void *buffer = calloc(buf_size, 1);
+  FILE *file_in  = fopen(in_path, "r");
+  FILE *file_out = fopen(out_path, "w");
+  if(!file_in || !file_out){
+    printf("Unable to acquire descriptors of passed files!\n");
+    exit(2);
+  }
+
+  while(count-- > 0){
+    size_t bytes_read = fread(buffer, 1, buf_size, file_in);
+    if(bytes_read < 0) {
+      printf("Error reading from input file!\n");
+      exit(2);
+    }
+
+    if(fwrite(buffer, 1, bytes_read, file_out) < 0){
+      printf("Errow writing to target file!\n");
+      exit(2);
+    }
+
+    if(bytes_read < buf_size) break;
+  }
+
+  fclose(file_in);
+  fclose(file_out);
+
   free(buffer);
+}
+
+void sys_copy(const char* in_path, const char* out_path, uint64_t count, uint64_t buf_size){
+  void *buffer = calloc(buf_size, 1);
+  int desc_in  = open(in_path, O_RDONLY);
+  int desc_out = open(out_path, O_RDWR | O_CREAT | O_TRUNC, S_IRUSR|S_IWUSR);
+  if(desc_in < 0 || desc_out < 0){
+    printf("Unable to acquire descriptors of passed files!\n");
+    exit(2);
+  }
+
+  while(count-- > 0){
+    int bytes_read = read(desc_in, buffer, buf_size);
+
+    if(bytes_read < 0){
+      printf("Unable to read from input file!\n");
+      exit(2);
+    }
+
+    if(bytes_read == 0) break;
+
+    if(write(desc_out, buffer, bytes_read) < 0){
+      printf("Error while writing to output file!\n");
+      exit(2);
+    }
+  }
+
+  close(desc_in);
+  close(desc_out);
+  free(buffer);
+}
+
+void sort(const char* path, uint64_t count, uint64_t size, uint8_t method){
+  if(method == 1) lib_sort(path, count, size);
+  else sys_sort(path, count, size);
+}
+
+void copy(const char* in_path, const char* out_path, uint64_t count, uint64_t buf_size, uint8_t method){
+  if(method == 1) lib_copy(in_path, out_path, count, buf_size);
+  else sys_copy(in_path, out_path, count, buf_size);
 }
 
 // =============== Arg parsing  ==================

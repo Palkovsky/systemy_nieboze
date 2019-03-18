@@ -17,39 +17,36 @@ $(NAME).o: $(NAME).c
 clean:
 	rm -f *.o *.a *.so.* *.out *.temp
 
-raport_all: all
-	echo "" > $(REPORT)
-	make raport BS=1 RC=400
-	make raport BS=1 RC=800
+test: all
+	echo  > $(REPORT)
 
-	make raport BS=4 RC=400
-	make raport BS=4 RC=800
+	for block_size in 1 4 512 1024 4096 8192 ; do \
+		make test_cpy BS=$$block_size RC=500000; \
+		make test_cpy BS=$$block_size RC=1000000; \
+	done
 
-	make raport BS=512 RC=400
-	make raport BS=512 RC=800
-
-	make raport BS=1024 RC=400
-	make raport BS=1024 RC=800
-
-	make raport BS=4096 RC=400
-	make raport BS=4096 RC=800
-
-	make raport BS=8192 RC=400
-	make raport BS=8192 RC=800
+	for block_size in 1 4 512 1024 4096 8192 ; do \
+		make test_sort BS=$$block_size RC=400; \
+		make test_sort BS=$$block_size RC=800; \
+	done
 
 	make clean
 
-raport:
+test_cpy:
+	./main.out generate bytes.temp 1 $(RC) >> /dev/null # Generate RC bytes
+	echo "============== COPY LIB Buffer Size=$(BS), Bytes=$(RC) ==============" >> $(REPORT)
+	./main.out copy bytes.temp cpy_lib.temp $(RC) $(BS) lib >> $(REPORT) # Copy RC bytes with buffer of BS using lib function
+	echo "\n" >> $(REPORT)
+	echo "============== COPY SYS Buffer Size=$(BS), Bytes=$(RC) ==============" >> $(REPORT)
+	./main.out copy bytes.temp cpy_sys.temp $(RC) $(BS) sys >> $(REPORT) # Copy RC bytes with buffer of BS using lib function
+	echo "\n" >> $(REPORT)
+
+test_sort:
 	./main.out generate bytes.temp $(RC) $(BS) >> /dev/null
-	echo "============== COPY LIB Record Size=$(BS), Record Count=$(RC) ==============" >> $(REPORT)
-	./main.out copy bytes.temp cpy_lib.temp $(RC) $(BS) lib >> $(REPORT)
-	echo "\n" >> $(REPORT)
-	echo "============== COPY SYS Record Size=$(BS), Record Count=$(RC) ==============" >> $(REPORT)
-	./main.out copy bytes.temp cpy_sys.temp $(RC) $(BS) sys >> $(REPORT)
-	echo "\n" >> $(REPORT)
+	./main.out copy bytes.temp cpy.temp $(RC) $(BS) lib >> /dev/null
 	echo "============== SORT LIB Record Size=$(BS), Record Count=$(RC) ==============" >> $(REPORT)
-	./main.out sort cpy_lib.temp $(RC) $(BS) lib >> $(REPORT)
+	./main.out sort bytes.temp $(RC) $(BS) lib >> $(REPORT)
 	echo "\n" >> $(REPORT)
 	echo "============== SORT SYS Record Size=$(BS), Record Count=$(RC) ==============" >> $(REPORT)
-	./main.out sort cpy_sys.temp $(RC) $(BS) sys >> $(REPORT)
+	./main.out sort cpy.temp $(RC) $(BS) sys >> $(REPORT)
 	echo "\n" >> $(REPORT)
