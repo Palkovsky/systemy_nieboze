@@ -33,11 +33,14 @@ void traverseDirectory(const char* path){
   }
 
   // Perform ls -l call
-  printf("PATH: %s, PID: %d\n", path, getpid());
-  char *command = calloc(strlen(path) + 20, sizeof(char));
-  sprintf(command, "ls -l %s", path);
-  system(command);
-  free(command);
+  pid_t pid = fork();
+  if(pid == 0){ // child process
+    printf("PATH: %s, PID: %d\n", path, getpid());
+    execl("/bin/ls", "ls", "-l", path, NULL);
+  }else{
+    int s;
+    waitpid(pid, &s, WUNTRACED | WCONTINUED);
+  }
 
   while((entry = readdir(dir)) != NULL){
     if(strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
