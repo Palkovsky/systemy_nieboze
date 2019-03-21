@@ -9,14 +9,21 @@ SHELL = /bin/bash
 CC = gcc -Wall -pedantic -std=gnu11
 TEST_DIR  = test_dir
 LIST_FILE = monitored.lst
-NAME = main
+NAME_1 = main
+NAME_2 = tester
 
-all: $(NAME).out
+all: $(NAME_1).out $(NAME_2).out
 
-$(NAME).out: $(NAME).o
-	$(CC) -o $(NAME).out $^
+$(NAME_1).out: $(NAME_1).o
+	$(CC) -o $(NAME_1).out $^
 
-$(NAME).o: $(NAME).c
+$(NAME_1).o: $(NAME_1).c
+	$(CC) -c -o $@ $<
+
+$(NAME_2).out: $(NAME_2).o
+	$(CC) -o $(NAME_2).out $^
+
+$(NAME_2).o: $(NAME_2).c
 	$(CC) -c -o $@ $<
 
 clean:
