@@ -18,7 +18,6 @@ void print_usage_and_exit(){
   exit(1);
 }
 
-
 int main(int argc, char **argv){
   if (argc != 5) print_usage_and_exit();
 
@@ -46,8 +45,10 @@ int main(int argc, char **argv){
     return 1;
   }
 
+  srand(time(NULL));
+
   while(1){
-    int32_t num = (rand() % (pmax - pmin + 1)) + pmin;
+    uint32_t num = (rand() % (pmax - pmin + 1)) + pmin;
     printf("%d seconds to next write\n", num);
     sleep(num);
 
@@ -71,6 +72,9 @@ int main(int argc, char **argv){
     free(buff);
     free(time_buff);
     free(random_buff);
+
+    fclose(file);
+    file = fopen(argv[1], "a");
   }
 
   fclose(file);

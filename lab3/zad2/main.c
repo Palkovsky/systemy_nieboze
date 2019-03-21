@@ -196,7 +196,7 @@ void watch_for_modification_mode1(watch_entry *entry, int32_t seconds){
 
   while(time(NULL) - start_time < seconds){
     lstat(entry->path, &stat);
-    if(stat.st_mtime > last_update){
+    if(stat.st_mtime != last_update){
       // Update date
       last_update = stat.st_mtime;
       copies++;
@@ -220,7 +220,10 @@ void watch_for_modification_mode1(watch_entry *entry, int32_t seconds){
 }
 
 void start_processes(watch_entry *head, int32_t seconds, int8_t mode){
-  if(head == NULL) return;
+  if(head == NULL){
+    printf("All valid monitors started!\n");
+    return;
+  }
 
   pid_t pid = fork();
   if(pid == 0){ // child
