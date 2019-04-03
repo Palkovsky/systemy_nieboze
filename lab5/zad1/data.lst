@@ -1,0 +1,5 @@
+ls -la | grep -E -i -w lst | wc -l
+ls -la | wc | wc -l | wc
+cat /etc/passwd | grep vagrant
+ps aux | grep root | wc -l
+cat /etc/passwd | wc
