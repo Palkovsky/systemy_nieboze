@@ -20,8 +20,7 @@ void print_usage_and_exit(){
   exit(1);
 }
 
-int file_exist (char *filename)
-{
+int file_exist (char *filename){
   struct stat buffer;
   return (stat (filename, &buffer) == 0);
 }
