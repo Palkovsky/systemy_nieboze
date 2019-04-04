@@ -18,7 +18,6 @@ typedef struct call_chain {
   int argc;
   int endline;
   pid_t pid;
-  int fd[2];
   struct call_chain *next;
 } call_chain;
 
