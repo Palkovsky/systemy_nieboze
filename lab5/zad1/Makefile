@@ -7,7 +7,6 @@
 SHELL = /bin/bash
 
 CC = gcc -Wall -pedantic -std=gnu11
-TEST_DIR  = test_dir
 LIST_FILE = data.lst
 NAME = main
 

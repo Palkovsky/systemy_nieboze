@@ -82,8 +82,10 @@ void print_list(call_chain *node){
   for(int i=0; i<node->argc+1; i++){
     printf("%s, ", node->argv[i]);
   }
-  if(node->endline) printf("\n");
-  else printf("| ");
+  if(node->endline) {
+    printf("\n");
+    return;
+  } else printf("| ");
   print_list(node->next);
 }
 
@@ -103,19 +105,21 @@ void run_all(call_chain *head){
   pipe_count = cmd_count-1;
   int *fds = calloc(pipe_count * 2, sizeof(int));
   for(int i = 0; i < pipe_count; i++) pipe(fds + i*2);
-  it = head;
-  int j =0;
 
+  it = head;
+  int j = 0;
   for(int i=0; i<cmd_count; i++){
     pid_t pid = fork();
-    if(pid == 0){
 
-      if(i > 0) dup2(fds[j-2], STDIN_FILENO);
-      if(i < cmd_count - 1) dup2(fds[j + 1], 1);
+    if(pid == 0){
+      if(i > 0) dup2(fds[j-2], STDIN_FILENO); // Don't overwrite STDIN for first program
+      if(i < cmd_count - 1) dup2(fds[j + 1], STDOUT_FILENO); // Dont overwirte STDOUT for last program
       execvp(it->argv[0], it->argv);
     }
 
+    // This descriptor has to closed, otherwise grep/wc will hang waiting for more input.
     close(fds[j+1]);
+
     it->pid = pid;
     it = it->next;
     j += 2;
@@ -125,9 +129,14 @@ void run_all(call_chain *head){
   it = head;
   while(1){
     waitpid(it->pid, &s, 0);
-    printf("%s finished with %d.\n", it->argv[0], s);
-    fflush(stdout);
-    if(it->endline == 1) break;
+
+    if(it->endline == 1){
+      printf("PROGRAM: ");
+      print_list(head);
+      printf("===============\n");
+      break;
+    }
+
     it = it->next;
   }
 
@@ -145,7 +154,6 @@ int main(int argc, char **argv){
 
   call_chain* head = parse_list(list_file);
   fclose(list_file);
-  print_list(head);
   run_all(head);
 
   return 0;
