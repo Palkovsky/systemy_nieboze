@@ -44,11 +44,10 @@ int main(int argc, char **argv){
     fifo = open(fifo_path, O_RDWR);
 
   printf("========== SLAVE | PID %d ==========\n", getpid());
+  srand(time(NULL));
 
   char date_buff[64] = {0};
   char out_buff[BUFF_SIZE] = {0};
-
-  srand(time(NULL));
 
   while(samples_no--){
     FILE *date_pipe = popen("date", "r");

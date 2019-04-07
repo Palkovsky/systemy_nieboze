@@ -26,6 +26,8 @@ void print_usage_and_exit(){
   exit(1);
 }
 
+
+// String manpilatuion in C. Yaaaay!
 call_chain* parse_list(FILE *file){
   char*      line = NULL;
   size_t     bufsize = 0;
@@ -61,6 +63,7 @@ call_chain* parse_list(FILE *file){
     it->argc = 0;
 
     while(token != NULL && it->argc < MAX_ARGS_NO){
+      // Trims new line from end
       token[strcspn(token, "\n")] = 0;
       it->argv[it->argc] = calloc(strlen(token) + 1, sizeof(char));
       strcpy(it->argv[it->argc], token);
@@ -95,15 +98,21 @@ void run_all(call_chain *head){
   size_t cmd_count = 0;
   size_t pipe_count = 0;
 
+  // Count commands in one line
   while(1){
     cmd_count++;
     if(it->endline == 1) break;
     it = it->next;
   }
 
+  // Allocate space for pipe descriptors
   pipe_count = cmd_count-1;
   int *fds = calloc(pipe_count * 2, sizeof(int));
-  for(int i = 0; i < pipe_count; i++) pipe(fds + i*2);
+  for(int i = 0; i < pipe_count; i++)
+    pipe(fds + i*2);
+
+  // Even indexes - read end
+  // Odd indexes - write end
 
   it = head;
   int j = 0;
@@ -111,12 +120,23 @@ void run_all(call_chain *head){
     pid_t pid = fork();
 
     if(pid == 0){
-      if(i > 0) dup2(fds[j-2], STDIN_FILENO); // Don't overwrite STDIN for first program
-      if(i < cmd_count - 1) dup2(fds[j + 1], STDOUT_FILENO); // Dont overwirte STDOUT for last program
+      // Don't overwrite STDIN for first program
+      if(i > 0){
+        dup2(fds[j-2], STDIN_FILENO);
+        close(fds[j-1]); // Close writing end.
+      }
+
+      // Dont overwirte STDOUT for last program
+      if(i < cmd_count - 1){
+        dup2(fds[j + 1], STDOUT_FILENO);
+        close(fds[j]); // Close reading end.
+      }
+
+      // After plumbing everything corectly - run program
       execvp(it->argv[0], it->argv);
     }
 
-    // This descriptor has to closed, otherwise grep/wc will hang waiting for more input.
+    // Writing descriptor in parent has to closed, otherwise grep/wc will hang waiting for more input.
     close(fds[j+1]);
 
     it->pid = pid;
@@ -124,11 +144,14 @@ void run_all(call_chain *head){
     j += 2;
   }
 
+
   int s;
   it = head;
   while(1){
+    // Waits for every program in chain
     waitpid(it->pid, &s, 0);
 
+    // If it's last one - print what was executed
     if(it->endline == 1){
       printf("PROGRAM: ");
       print_list(head);
@@ -139,6 +162,7 @@ void run_all(call_chain *head){
     it = it->next;
   }
 
+  // Execute next line
   run_all(it->next);
 }
 

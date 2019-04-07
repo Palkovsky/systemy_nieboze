@@ -20,7 +20,3 @@ $(NAME).o: $(NAME).c
 
 clean:
 	rm -f *.o *.a *.so.* *.out *.temp
-
-generate_list:
-	echo 'ls -la | grep main'   >  $(LIST_FILE)
-	echo 'ls -la | grep main | grep main | grep main | grep main' >> $(LIST_FILE)

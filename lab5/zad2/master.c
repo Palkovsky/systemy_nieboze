@@ -23,8 +23,9 @@ void print_usage_and_exit(){
 int main(int argc, char **argv){
   if (argc != 2) print_usage_and_exit();
 
+  // Will try to open fifo
+  // If path is wrong it'll try to create one and open it.
   char *fifo_path = argv[1];
-
   int fifo = open(fifo_path, O_RDWR);
   if(fifo < 0){
     printf("Given FIFO stream doesn't exist. Creating one...\n");
@@ -36,6 +37,7 @@ int main(int argc, char **argv){
     fifo = open(fifo_path, O_RDWR);
   }
 
+  // Infinite loop - reading BUFF_SIZE bytes from FIFO.
   char buff[BUFF_SIZE];
   while(1){
    int bytes = read(fifo, buff, BUFF_SIZE);
