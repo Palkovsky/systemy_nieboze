@@ -96,7 +96,6 @@ void run_all(call_chain *head){
 
   call_chain* it = head;
   size_t cmd_count = 0;
-  size_t pipe_count = 0;
 
   // Count commands in one line
   while(1){
@@ -106,30 +105,29 @@ void run_all(call_chain *head){
   }
 
   // Allocate space for pipe descriptors
-  pipe_count = cmd_count-1;
-  int *fds = calloc(pipe_count * 2, sizeof(int));
-  for(int i = 0; i < pipe_count; i++)
-    pipe(fds + i*2);
+  int fds[4] = {0};
+  pipe(fds + 2);
 
-  // Even indexes - read end
-  // Odd indexes - write end
+  // 0 - previous read end
+  // 1 - previous write end
+  // 2 - current read end
+  // 3 - current write end
 
   it = head;
-  int j = 0;
   for(int i=0; i<cmd_count; i++){
     pid_t pid = fork();
 
     if(pid == 0){
       // Don't overwrite STDIN for first program
       if(i > 0){
-        dup2(fds[j-2], STDIN_FILENO);
-        close(fds[j-1]); // Close writing end.
+        dup2(fds[0], STDIN_FILENO);
+        close(fds[1]); // Close writing end.
       }
 
       // Dont overwirte STDOUT for last program
       if(i < cmd_count - 1){
-        dup2(fds[j + 1], STDOUT_FILENO);
-        close(fds[j]); // Close reading end.
+        dup2(fds[3], STDOUT_FILENO);
+        close(fds[2]); // Close reading end.
       }
 
       // After plumbing everything corectly - run program
@@ -137,11 +135,14 @@ void run_all(call_chain *head){
     }
 
     // Writing descriptor in parent has to closed, otherwise grep/wc will hang waiting for more input.
-    close(fds[j+1]);
+    close(fds[3]);
 
     it->pid = pid;
     it = it->next;
-    j += 2;
+
+    fds[0] = fds[2];
+    fds[1] = fds[3];
+    pipe(fds + 2);
   }
 
 
