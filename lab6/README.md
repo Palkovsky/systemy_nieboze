@@ -1,3 +1,3 @@
-## Poziom trudności: PODLASKI
+## Poziom trudności: BANDYCKI
 
 ![](https://thumbs.gfycat.com/BlindThoroughJay.webp)
