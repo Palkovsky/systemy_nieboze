@@ -17,7 +17,8 @@
 #define WAIT 0
 #define NOWAIT 1
 
-void prompt_user(char *buff);
+void read_instructions(FILE *f);
+void exec_instruction(char *instruction);
 void handle_exit();
 void handle_server_messages();
 void handle_server_shutdown();
@@ -38,7 +39,6 @@ int client_qid; // Client queue identifier
 int client_id;  // Given by server. Required for communication.
 
 ReqMsg msg;
-char input_buff[MAX_MSG_SIZE];
 
 int main(int argc, char **argv){
   signal(SIGINT, handle_exit);
@@ -49,8 +49,6 @@ int main(int argc, char **argv){
     printf("Error while conecting to server: %s\n", strerror(errno));
     exit(1);
   }
-  printf("Server Queue ID: %d\n", server_qid);
-
 
   // Create private message queue for server -> client communication.
   if((client_qid =  msgget(IPC_PRIVATE, QUEUE_PERMISSIONS)) == -1){
@@ -58,23 +56,96 @@ int main(int argc, char **argv){
     exit(1);
   }
 
+  printf("Server Queue ID: %d\n", server_qid);
+  printf("Private Queue ID: %d\n", client_qid);
+
   send_init();
-  send_list();
-  send_to_all("no elo cipeczko co masz na sobe");
+  read_instructions(stdin);
 
   printf("========== Chat client ===========\n");
   while(1){
-
-    // Handling server messages
-    handle_server_messages();
-
-    //prompt_user(input_buff);
-    //printf("%s\n", input_buff);
+    handle_server_messages(); // Handling server messages
   }
 
   return 0;
 }
 
+/*
+ * Reads instructions from specified fd.
+ */
+void read_instructions(FILE *f){
+  char *buff = calloc(MAX_MSG_SIZE, sizeof(char));
+  size_t size;
+
+  while(1){
+    if(getline(&buff, &size, f) == -1) return;
+    exec_instruction(buff);
+  }
+
+  free(buff);
+}
+
+void exec_instruction(char *instruction){
+
+  printf("Executing: %s", instruction);
+
+  if(strncmp(instruction, "ECHO ", 5) == 0){
+    instruction += 5;
+    send_echo(instruction);
+
+  }else if(strncmp(instruction, "TOALL ", 6) == 0){
+    instruction += 6;
+    send_to_all(instruction);
+
+  }else if(strncmp(instruction, "TOFRIENDS ", 10) == 0){
+    instruction += 10;
+    send_to_friends(instruction);
+
+  }else if(strncmp(instruction, "TOONE ", 6) == 0){
+    instruction += 6;
+    char *token = strtok(instruction, " ");
+    int target = atoi(token);
+    token = strtok(NULL, "");
+    send_to_one(target, token);
+
+  }else if(strncmp(instruction, "LIST", 4) == 0){
+    send_list();
+
+  }else if(strncmp(instruction, "STOP", 4) == 0){
+    send_stop();
+
+  }else if(strncmp(instruction, "FRIENDS ", 8) == 0){
+    instruction += 8;
+    send_friends(instruction);
+
+  }else if(strncmp(instruction, "READ ", 5) == 0){
+    instruction += 5;
+
+    char *path = calloc(256, sizeof(char));
+    strcpy(path, instruction);
+    path[strcspn(path, "\n")] = 0;
+
+
+    FILE *f = fopen(path, "r");
+    if(f == NULL){
+      printf("Unable to open %s. %s\n", path, strerror(errno));
+      free(path);
+      return;
+    }
+
+    read_instructions(f);
+    fclose(f);
+    free(path);
+
+  } else {
+    printf("Unrecognizale command: %s", instruction);
+  }
+}
+
+/*
+ * Handles messages from server.
+ * Server can only ask for echoing certain message or stopping.
+ */
 void handle_server_messages(){
   if(msgrcv(client_qid, &msg, sizeof(ReqMsg) - sizeof(long), 0, 0) == -1) {
     return;
@@ -85,6 +156,11 @@ void handle_server_messages(){
     printf("%s\n", msg.arg1);
     break;
 
+  case LIST_REQ:
+    printf("%s\n", msg.arg1);
+    printf("%s\n", msg.arg2);
+    break;
+
   case STOP_REQ:
     handle_server_shutdown();
     break;
@@ -92,8 +168,6 @@ void handle_server_messages(){
   default:
     break;
   }
-
-  msg.req_type = -1;
 }
 
 
@@ -120,9 +194,7 @@ void send_echo(const char *text){
 void send_list(){
   msg.type = msg.req_type = LIST_REQ;
   msg.num1 = client_id;
-  send_request(WAIT);
-  printf("%s\n", msg.arg1);
-  printf("%s\n", msg.arg2);
+  send_request(NOWAIT);
 }
 
 void send_friends(const char *text){
@@ -165,7 +237,7 @@ void send_request(int waitflag){
     return;
   }
 
-  if(waitflag == 0){
+  if(waitflag == WAIT){
     ReqMsg res;
     if(msgrcv (client_qid, &res, sizeof(ReqMsg) - sizeof(long), 0, 0) == -1) {
       printf("Error while receiving message: %s.\n", strerror(errno));
@@ -181,15 +253,6 @@ void send_request(int waitflag){
 }
 
 /*
- * Prompts user for command
- */
-void prompt_user(char *buff){
-  memset(buff, 0, MAX_MSG_SIZE);
-  printf("Command: ");
-  scanf("%[^\n]%*c", buff);
-}
-
-/*
  * CTRL+C handler
  */
 void handle_exit(){
@@ -198,7 +261,10 @@ void handle_exit(){
   exit(1);
 }
 
+/*
+ * Executes when server notifies abut stopping.
+ */
 void handle_server_shutdown(){
   msgctl(client_qid, IPC_RMID, NULL);
-  exit(1); 
+  exit(1);
 }

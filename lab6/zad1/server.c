@@ -39,7 +39,7 @@ int main(int argc, char **argv){
   memset(clients, 0, sizeof(clients));
   for(int i=0; i<MAX_ROOM_SIZE; i++) friends[i] = -1;
 
-  // Acquire queue
+  // Acquire queue key and id
   key_t key = ftok(SERVER_KEY_PATH, SERVER_KEY_SEED);
   q_id = msgget(key, IPC_CREAT | QUEUE_PERMISSIONS);
   if(q_id < 0){
@@ -64,46 +64,36 @@ int main(int argc, char **argv){
     print_req();
 
     switch(req.req_type){
-
     case INIT_REQ:
       respond_init();
       break;
-
     case STOP_REQ:
       respond_stop();
       break;
-
     case ECHO_REQ:
       respond_echo();
       break;
-
     case TOALL_REQ:
       respond_to_all();
       break;
-
     case TOFRIENDS_REQ:
       respond_to_friends();
       break;
-
     case TOONE_REQ:
       respond_to_one();
       break;
-
     case LIST_REQ:
       respond_list();
       break;
-
     case FRIENDS_REQ:
       respond_friends();
       break;
-
     default:
       printf("Bad request.\n");
       break;
     }
   }
 
-  handle_exit();
   return 0;
 }
 
@@ -145,6 +135,7 @@ void respond_stop(){
  */
 void respond_echo(){
   int client_qid = clients[req.num1];
+  req.type = req.req_type = ECHO_REQ;
   timestamp_message(req.num1, req.arg1);
 
   if(msgsnd(client_qid, &req, sizeof(ReqMsg) - sizeof(long), 0) == -1){
@@ -159,10 +150,12 @@ void respond_to_all(){
   req.type = req.req_type = ECHO_REQ;
   timestamp_message(req.num1, req.arg1);
 
-  for(int i=0; i < MAX_ROOM_SIZE; i++){
-    if(clients[i] == 0) continue;
-    if(msgsnd(clients[i], &req, sizeof(ReqMsg) - sizeof(long), 0) == -1){
-      printf("Error sending echo response to %d. %s.\n", clients[i], strerror(errno));
+  for(int i = 0; i < MAX_ROOM_SIZE; i++){
+    int qid = clients[i];
+    if(qid == 0) continue;
+
+    if(msgsnd(qid, &req, sizeof(ReqMsg) - sizeof(long), 0) == -1){
+      printf("Error sending echo response to %d. %s.\n", qid, strerror(errno));
     }
   }
 }
@@ -176,6 +169,7 @@ void respond_to_friends(){
 
   for(int i=0; i < MAX_ROOM_SIZE && friends[i] != -1; i++){
     int qid = clients[friends[i]];
+    if(qid == 0) continue;
 
     if(msgsnd(qid, &req, sizeof(ReqMsg) - sizeof(long), 0) == -1){
       printf("Error sending echo response to %d. %s.\n", qid, strerror(errno));
@@ -190,7 +184,9 @@ void respond_to_one(){
   req.type = req.req_type = ECHO_REQ;
   timestamp_message(req.num1, req.arg1);
 
-  int qid = req.num2;
+  int qid = clients[req.num2];
+  if(qid == 0) return;
+
   if(msgsnd(qid, &req, sizeof(ReqMsg) - sizeof(long), 0) == -1){
     printf("Error sending echo response to %d. %s.\n", qid, strerror(errno));
   }

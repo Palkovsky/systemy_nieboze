@@ -1,0 +1,8 @@
+LIST
+TOALL Pierwsza wiadomosc
+TOALL Druga wiadomosc
+FRIENDS 1 2
+TOFRIENDS Mam na imie Ania, mam 12 lat.
+TOFRIENDS Czesc Anai, tu Wojtek. Tez mam 12 lat.
+READ inst2.lst
+LIST
