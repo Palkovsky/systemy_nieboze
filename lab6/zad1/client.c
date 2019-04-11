@@ -147,7 +147,7 @@ void exec_instruction(char *instruction){
  * Server can only ask for echoing certain message or stopping.
  */
 void handle_server_messages(){
-  if(msgrcv(client_qid, &msg, sizeof(ReqMsg) - sizeof(long), 0, 0) == -1) {
+  if(msgrcv(client_qid, &msg, sizeof(ReqMsg) - sizeof(long), BY_PRIORITY, 0) == -1) {
     return;
   }
 
@@ -181,7 +181,7 @@ void send_init(){
 
 void send_stop(){
   msg.type = msg.req_type = STOP_REQ;
-  send_request(WAIT);
+  send_request(NOWAIT);
 }
 
 void send_echo(const char *text){
@@ -257,8 +257,6 @@ void send_request(int waitflag){
  */
 void handle_exit(){
   send_stop();
-  msgctl(client_qid, IPC_RMID, NULL);
-  exit(1);
 }
 
 /*

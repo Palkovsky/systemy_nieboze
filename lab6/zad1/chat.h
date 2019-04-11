@@ -6,6 +6,7 @@
 #define SERVER_KEY_PATH "/tmp"
 #define SERVER_KEY_SEED 112
 #define QUEUE_PERMISSIONS 0666
+#define BY_PRIORITY -100
 
 
 typedef enum ReqType {STOP_REQ = 1, /* Shutdown request */

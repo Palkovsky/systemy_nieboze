@@ -56,7 +56,7 @@ int main(int argc, char **argv){
   printf("Queue ID: %d | Listening...\n", q_id);
   while(1){
 
-    if(msgrcv (q_id, &req, sizeof(ReqMsg) - sizeof(long), 0, 0) == -1) {
+    if(msgrcv (q_id, &req, sizeof(ReqMsg) - sizeof(long), BY_PRIORITY, 0) == -1) {
       printf("SERVER: Error while receiving message: %s.\n", strerror(errno));
       exit(1);
     }
