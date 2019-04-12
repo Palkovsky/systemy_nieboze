@@ -1,25 +1,24 @@
 #ifndef CHAT_H
 #define CHAT_H
 
-#define MAX_MSG_SIZE 2048
+#define MAX_MSG_SIZE 1024
 
-#define SERVER_NAME "/chatserver"
+#define SERVER_NAME "/aa"
 #define Q_PERM 0666
 
 
-typedef enum ReqType {STOP_REQ = 1, /* Shutdown request */
-                      LIST_REQ = 2, /* List request */
-                      FRIENDS_REQ = 3, /* Setting friends list request */
-                      INIT_REQ = 4, /* User registration request */
-                      ECHO_REQ = 5, /* Echo request */
-                      TOALL_REQ = 6, /* Echo to all */
-                      TOFRIENDS_REQ = 7, /* Echo only to friend */
-                      TOONE_REQ = 8, /* Echo to specific person */
+typedef enum ReqType {STOP_REQ = 8, /* Shutdown request */
+                      LIST_REQ = 7, /* List request */
+                      FRIENDS_REQ = 6, /* Setting friends list request */
+                      INIT_REQ = 5, /* User registration request */
+                      ECHO_REQ = 4, /* Echo request */
+                      TOALL_REQ = 3, /* Echo to all */
+                      TOFRIENDS_REQ = 2, /* Echo only to friend */
+                      TOONE_REQ = 1, /* Echo to specific person */
 }  ReqType;
 
 
 typedef struct ReqMsg {
-  long type;
   ReqType req_type;
   int err_flag;
   int num1;
@@ -35,7 +34,7 @@ typedef struct ReqMsg {
   RFC 2137 - Chat protocool specification
 
   Init:
-    - client sends his private qid in num1
+    - client sends his private server name in arg1
     - server responds with unique client_id in num1
     - from now on client always sends his uniqe_client_id in num1 for identification
 
