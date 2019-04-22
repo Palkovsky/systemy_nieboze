@@ -19,7 +19,7 @@
 
 void print_req();
 void handle_exit();
-void timestamp_message(int uid, char *string);
+void timestamp_message(int, char*);
 
 ReqMsg req;                 // Buffer for incoming requests.
 mqd_t qd;                   // Queue descriptor

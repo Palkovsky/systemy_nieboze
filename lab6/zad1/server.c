@@ -18,7 +18,7 @@
 
 void print_req();
 void handle_exit();
-void timestamp_message(int uid, char *string);
+void timestamp_message(int, char*);
 
 // Message responses
 void respond_init();

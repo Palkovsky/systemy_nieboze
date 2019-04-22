@@ -16,8 +16,8 @@
 #define WAIT 0
 #define NOWAIT 1
 
-void read_instructions(FILE *f);
-void exec_instruction(char *instruction);
+void read_instructions(FILE*);
+void exec_instruction(char*);
 void handle_exit();
 void handle_server_messages();
 void handle_server_shutdown();
@@ -27,12 +27,12 @@ char* gen_queue_name();
 // Requests
 void send_init();
 void send_stop();
-void send_echo(const char *message);
+void send_echo(const char*);
 void send_list();
-void send_friends(const char *friends);
-void send_to_all(const char *message);
-void send_to_friends(const char *message);
-void send_to_one(int target_id, const char *message);
+void send_friends(const char*);
+void send_to_all(const char*);
+void send_to_friends(const char*);
+void send_to_one(int, const char*);
 
 char *q_name;
 mqd_t server_qd; // Server queue descriptor
@@ -186,6 +186,7 @@ void send_init(){
 
 void send_stop(){
   msg.req_type = STOP_REQ;
+  msg.num1 = client_id;
   send_request(NOWAIT);
 }
 
