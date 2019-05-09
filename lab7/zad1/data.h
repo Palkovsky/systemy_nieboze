@@ -6,15 +6,20 @@
 #define FTOK_SEM_PATH "/tmp"
 #define FTOK_SEM_SEED 2138
 #define SHM_PERM 0600
+#define SEM_PERM 0600
+
+#define LOADER_EXECUTABLE "loader.out"
 
 #define MAX_LINE_CAPACITY 1024 // To prevent SHM getting too large
 #define ERR_CAP_REACHED 1
 #define ERR_WEIGHT_CAP_REACHED 2
 
-// This struct looks like an overkill
 typedef struct prod_node
 {
   long weight;
+  pid_t producer;
+  long ordnum;
+  unsigned long timestamp;
 } prod_node;
 
 typedef struct prod_line
@@ -30,13 +35,12 @@ typedef struct prod_line
 
 // Interface for interacting with prod_line
 prod_line *line_new(long, long);
-
 prod_node *line_oldest(prod_line*);
-
-long line_put(prod_line*, long);
-
+long line_put(prod_line*, long, long);
 void line_dispose(prod_line*);
-
+void line_clear(prod_line*);
 long line_weight(prod_line*);
+long line_free_space(prod_line*);
+long line_free_weight(prod_line*);
 
 #endif /* DATA_H */

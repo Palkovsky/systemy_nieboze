@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+#include <unistd.h>
+#include <sys/time.h>
 
 #include "data.h"
 
@@ -28,6 +30,13 @@ void line_dispose(prod_line *line)
   free(line);
 }
 
+void line_clear(prod_line *line)
+{
+  line->tail = 0;
+  line->head = 0;
+  line->size = 0;
+}
+
 long line_weight(prod_line *line)
 {
   long i = line->head;
@@ -44,6 +53,17 @@ long line_weight(prod_line *line)
   }
 
   return weight;
+}
+
+long line_free_space(prod_line *line)
+{
+  return line->capacity - line->size;
+}
+
+
+long line_free_weight(prod_line *line)
+{
+  return line->weight_capacity - line_weight(line);
 }
 
 prod_node *line_oldest(prod_line *line)
@@ -65,7 +85,7 @@ prod_node *line_oldest(prod_line *line)
   return item;
 }
 
-long line_put(prod_line *line, long weight)
+long line_put(prod_line *line, long weight, long ordnum)
 {
   if(line->capacity < line->size + 1 || MAX_LINE_CAPACITY < line->size + 1)
   {
@@ -78,13 +98,19 @@ long line_put(prod_line *line, long weight)
 
   prod_node *item = line->items + line->tail;
   item->weight = weight;
+  item->ordnum = ordnum;
+  item->producer = getpid();
+
+  struct timeval current_time;
+	gettimeofday(&current_time, NULL);
+  item->timestamp = current_time.tv_sec * (int) 1e6 + current_time.tv_usec;
 
   line->size++;
   line->tail++;
   if(line->tail >= MAX_LINE_CAPACITY)
-    {
-      line->tail = 0;
-    }
+  {
+    line->tail = 0;
+  }
 
   return 0;
 }
