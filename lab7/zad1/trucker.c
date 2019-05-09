@@ -311,7 +311,7 @@ void exit_handler()
 
 void print_usage(char *progname)
 {
-  printf("Usage: %s <W> <X> <K> <M>\n \
+  printf("Usage: %s <W> <WC> <X> <K> <M>\n \
          \rW  - workers count\n \
          \rWC - worker cycles \n \
          \rX  - truck capacity\n \
