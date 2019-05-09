@@ -192,7 +192,7 @@ void exit_handler()
 void print_usage(char *progname)
 {
   printf("Usage: %s <N> {C}\n \
-         \rN - number of packages. From 1 to %d.\n \
+         \rN - size of packages. From 1 to %d.\n \
          \rC - number of cycles, optional.\n", progname, MAX_N);
 }
 

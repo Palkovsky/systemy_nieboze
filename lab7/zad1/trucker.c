@@ -170,6 +170,8 @@ void start_workers(int count)
       sprintf(N_str, "%d", N);
       sprintf(C_str, "%d", C);
 
+      // For workes in infite loops, replace with:
+      // execl(LOADER_EXECUTABLE, LOADER_EXECUTABLE,  N_str, NULL)
       if(execl(LOADER_EXECUTABLE, LOADER_EXECUTABLE,  N_str, C_str, NULL) == -1)
       {
         printf("Unable to exec %s. PID %d\n", LOADER_EXECUTABLE, getpid());
