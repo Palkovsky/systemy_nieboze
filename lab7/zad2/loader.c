@@ -119,7 +119,6 @@ int shm_get()
   return shm_id;
 }
 
-
 prod_line *shm_map(int shm_id)
 {
   void *ptr = mmap(NULL, sizeof(prod_line), PROT_READ | PROT_WRITE, MAP_SHARED, shm_id, 0);
@@ -171,7 +170,6 @@ void sem_free(sem_t *sem_id)
     exit(1);
   }
 }
-
 
 /*
  * Helpers
