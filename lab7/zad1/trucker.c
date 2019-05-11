@@ -130,6 +130,8 @@ void truck_logic()
       {
         sprintf(message, "TRUCK: Truck full! Sending new one...");
         print_timestamped(message);
+	// colud also fork() here if we would really want another process for the truck
+	// but it would require extra flag to inform that semaphore is taken
         loaded = 0;
         sprintf(message, "TRUCK: New truck ready. Capacity: %ld/%ld.", loaded, truck_cap);
         print_timestamped(message);
