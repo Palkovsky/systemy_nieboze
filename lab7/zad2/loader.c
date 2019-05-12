@@ -13,8 +13,6 @@
 
 #include "data.h"
 
-#define MAX_N 100
-
 // Helpers
 void exit_handler();
 void print_usage(char*);
@@ -45,9 +43,9 @@ int main(int argc, char **argv)
 
   long N = strtol(argv[1], NULL, 10);
   long C = -1;
-  if(N <= 0 || N > MAX_N)
+  if(N <= 0)
   {
-    printf("N must be in range from 1 to %d.\n", MAX_N);
+    printf("N must be positive.\n");
     exit(1);
   }
 
@@ -184,8 +182,8 @@ void exit_handler()
 void print_usage(char *progname)
 {
   printf("Usage: %s <N> {C}\n \
-         \rN - size of packages. From 1 to %d.\n \
-         \rC - number of cycles, optional.\n", progname, MAX_N);
+         \rN - size of packages. Must be positive.\n \
+         \rC - number of cycles, optional.\n", progname);
 }
 
 void print_timestamped(char *str)
