@@ -42,6 +42,15 @@ int main(int argc, char **argv)
     exit(1);
   }
 
+  reset_image(img);
+  printf("OUT: %d\n", load_image(img, "../balloons.ascii.pgm"));
+  print_image(img);
+  if(save_image(img, "../balloons_cpy.ascii.pgm") != IMG_OK)
+    {
+      printf("Error while saving barbara copy.");
+      exit(1);
+    }
+
   dispose_image(img);
   return 0;
 }
