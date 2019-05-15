@@ -10,11 +10,11 @@ CC = gcc -Wall -pedantic -std=gnu11
 all: main.out
 
 main.out: main.c images.o
-	$(CC) -c $< -lpthread
-	$(CC) -o $@ images.o main.o -lpthread
+	$(CC) -c $< -lm -lpthread
+	$(CC) -o $@ images.o main.o -lm -lpthread
 
 images.o: images.c images.h
-	$(CC) -c $<
+	$(CC) -c $< -lm
 
 clean:
 	rm -f *.o *.a *.so.* *.out *.temp

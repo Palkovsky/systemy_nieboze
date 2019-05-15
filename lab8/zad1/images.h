@@ -31,6 +31,7 @@ int dispose_image(Image*);
 int load_transform(Image_Transform*, const char*);
 int dispose_transform(Image_Transform*);
 
-int apply_transform(Image*, Image_Transform*, long, long);
+int apply_on_pixel(Image*, Image_Transform*, long, long);
+int apply_on_image(Image*, Image_Transform*);
 
 #endif /* IMAGES_H */

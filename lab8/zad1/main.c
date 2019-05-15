@@ -16,29 +16,39 @@ int main(int argc, char **argv)
 {
 
   Image_Transform *trans = malloc(sizeof(Image_Transform));
+  Image *img = malloc(sizeof(Image));
+
 
   int err;
   if((err = load_transform(trans,  "../box_blur.trans")) != IMG_OK)
   {
-    printf("Error: %d.\n", err);
+    printf("Error while loading transform: %d.\n", err);
     exit(1);
   }
   print_transform(trans);
-  dispose_transform(trans);
 
-  /*
-  Image *img = malloc(sizeof(Image));
 
-  printf("OUT: %d\n", load_image(img, "../mona_lisa.ascii.pgm"));
+  if((err = load_image(img, "../balloons.ascii.pgm")) != IMG_OK)
+  {
+    printf("Error while loading image: %d.\n", err);
+    exit(1);
+  }
   print_image(img);
-  if(save_image(img, "../mona_lisa_cpy.ascii.pgm") != IMG_OK)
+
+  apply_on_image(img, trans);
+  apply_on_image(img, trans);
+  apply_on_image(img, trans);
+
+  if(save_image(img, "../balloons_blur.ascii.pgm") != IMG_OK)
   {
     printf("Error while saving mona-lisa copy.");
     exit(1);
   }
 
-  reset_image(img);
+  dispose_transform(trans);
+  dispose_image(img);
 
+  /*
   printf("OUT: %d\n", load_image(img, "../screws.ascii.pgm"));
   print_image(img);
   if(save_image(img, "../screws_cpy.ascii.pgm") != IMG_OK)

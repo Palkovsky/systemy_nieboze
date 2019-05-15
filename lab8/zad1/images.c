@@ -2,8 +2,11 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include <math.h>
 
 #include "images.h"
+
+#define MAX(x, y) (((x) > (y)) ? (x) : (y))
 
 /*
  * load_image()
@@ -234,13 +237,42 @@ int dispose_transform(Image_Transform* trans)
 }
 
 /*
- * apply_transform()
+ * apply_for_pixel()
  * Applies transform to given pixel in passed image.
  */
-int apply_transform(Image* img, Image_Transform* trans, long row, long col)
+int apply_on_pixel(Image* img, Image_Transform* trans, long row, long col)
 {
   if(img == NULL || trans == NULL)
     { return IMG_NULL_PTR_ERR; }
 
+  double new_value = 0;
+  long sz = trans->size;
+  for(int i=0; i<sz; i++)
+  {
+    for(int j=0; j<sz; j++)
+    {
+      long img_col = MAX(0, col - (long) ceil(sz/2) + i);
+      long img_row = MAX(0, row - (long) ceil(sz/2) + j);
+      if(img_row < img->height && img_col < img->width)
+      {
+        new_value += img->pixels[img_row][img_col] * trans->values[j][i];
+      }
+    }
+  }
+
+  img->pixels[row][col] = (char) round(new_value);
+
+  return IMG_OK;
+}
+
+int apply_on_image(Image* img, Image_Transform* trans)
+{
+  for(long row=0; row < img->height; row++)
+  {
+    for(long col=0; col < img->width; col++)
+    {
+      apply_on_pixel(img, trans, row, col);
+    }
+  }
   return IMG_OK;
 }
