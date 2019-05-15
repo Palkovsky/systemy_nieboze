@@ -12,18 +12,14 @@
 int load_image(Image *buf, const char* path)
 {
   if(buf == NULL)
-  {
-    return IMG_NULL_PTR_ERR;
-  }
+    { return IMG_NULL_PTR_ERR; }
 
   FILE *fp;
   char *pgma;
   size_t filesz;
 
   if((fp = fopen(path, "r")) == NULL)
-  {
-    return IMG_IO_ERR;
-  }
+    { return IMG_IO_ERR; }
 
   // Acquire filesize
   fseek(fp, 0, SEEK_END);
@@ -32,9 +28,7 @@ int load_image(Image *buf, const char* path)
 
   pgma = calloc(sizeof(char), filesz);
   if(fread(pgma, sizeof(char), filesz, fp) != filesz)
-  {
-    return IMG_IO_ERR;
-  }
+    { return IMG_IO_ERR; }
 
   char *header_sep = "\t\r\n";
   char *body_sep = "\t\r\n ";
@@ -66,9 +60,7 @@ int load_image(Image *buf, const char* path)
   // Initialize 2D image matrix
   unsigned char **pixels = calloc(buf->height, sizeof(char*));
   for(long i=0; i<buf->height; i++)
-  {
-    pixels[i] = calloc(buf->width, sizeof(char));
-  }
+    { pixels[i] = calloc(buf->width, sizeof(char)); }
   buf->pixels = pixels;
 
   long row = 0;
@@ -132,6 +124,10 @@ int save_image(Image *img, const char *path)
   return IMG_OK;
 }
 
+/*
+ * reset_image()
+ * Frees up memory taken by pixel-array, but not by Image struct.
+ */
 int reset_image(Image* img)
 {
   if(img == NULL)
@@ -144,6 +140,10 @@ int reset_image(Image* img)
   return IMG_OK;
 }
 
+/*
+ * dispose_image()
+ * reset_image() + frees up memory taken by struct
+ */
 int dispose_image(Image *img)
 {
   int res;
@@ -153,17 +153,94 @@ int dispose_image(Image *img)
   return IMG_OK;
 }
 
+/*
+ * load_transform()
+ * Loads file with transform information.
+ */
 int load_transform(Image_Transform* buf, const char* path)
 {
-  return 0;
+  if(buf == NULL)
+    { return IMG_NULL_PTR_ERR; }
+
+  FILE *fp;
+  char *transform;
+  size_t filesz;
+
+  if((fp = fopen(path, "r")) == NULL)
+    { return IMG_IO_ERR; }
+
+  // Acquire filesize
+  fseek(fp, 0, SEEK_END);
+  filesz = ftell(fp);
+  fseek(fp, 0, SEEK_SET);
+
+  transform = calloc(sizeof(char), filesz);
+  if(fread(transform, sizeof(char), filesz, fp) != filesz)
+    { return IMG_IO_ERR; }
+
+  char *sep = "\r\n ";
+  char *size_str = strtok(transform, sep);
+  if(size_str == NULL)
+    { goto img_err; }
+
+  long transform_size = strtol(size_str, NULL, 10);
+  buf->size = transform_size;
+
+  // Initialize 2D transform matrix
+  double **values = calloc(transform_size, sizeof(double*));
+  for(long i=0; i<transform_size; i++)
+    { values[i] = calloc(transform_size, sizeof(double)); }
+  buf->values = values;
+
+  long row = 0;
+  long col = 0;
+  char *token = strtok(NULL, sep);
+  while(token != NULL)
+  {
+    if(col >= buf->size)
+      { col=0; row++; }
+    if(row >= buf->size)
+      { break; }
+
+    double value = atof(token);
+    values[row][col] = value;
+    col++;
+    token = strtok(NULL, sep);
+  }
+
+  fclose(fp);
+  return IMG_OK;
+
+ img_err:
+  fclose(fp);
+  return IMG_INVALID_FILE;
 }
 
+/*
+ * dispose_transform()
+ * Frees up memory taken by Image_Transform struct.
+ */
 int dispose_transform(Image_Transform* trans)
 {
-  return 0;
+  if(trans == NULL)
+    { return IMG_NULL_PTR_ERR; }
+
+  for(int i=0; i<trans->size; i++)
+    { free(trans->values[i]); }
+  free(trans->values);
+  free(trans);
+
+  return IMG_OK;
 }
 
+/*
+ * apply_transform()
+ * Applies transform to given pixel in passed image.
+ */
 int apply_transform(Image* img, Image_Transform* trans, long row, long col)
 {
-  return 0;
+  if(img == NULL || trans == NULL)
+    { return IMG_NULL_PTR_ERR; }
+
+  return IMG_OK;
 }

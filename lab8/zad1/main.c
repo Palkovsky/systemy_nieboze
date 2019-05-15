@@ -10,9 +10,23 @@
 
 unsigned long get_timestamp(void);
 void print_image(Image*);
+void print_transform(Image_Transform*);
 
 int main(int argc, char **argv)
 {
+
+  Image_Transform *trans = malloc(sizeof(Image_Transform));
+
+  int err;
+  if((err = load_transform(trans,  "../box_blur.trans")) != IMG_OK)
+  {
+    printf("Error: %d.\n", err);
+    exit(1);
+  }
+  print_transform(trans);
+  dispose_transform(trans);
+
+  /*
   Image *img = malloc(sizeof(Image));
 
   printf("OUT: %d\n", load_image(img, "../mona_lisa.ascii.pgm"));
@@ -50,8 +64,9 @@ int main(int argc, char **argv)
       printf("Error while saving barbara copy.");
       exit(1);
     }
-
-  dispose_image(img);
+    dispose_image(img);
+  */
+  
   return 0;
 }
 
@@ -71,4 +86,17 @@ void print_image(Image *img)
   printf("Dimen: %ldx%ld\n", img->width, img->height);
   printf("Colors: %ld\n", img->colors);
   printf("Size: %ld\n", sizeof(img->pixels));
+}
+
+void print_transform(Image_Transform *trans)
+{
+  long sz = trans->size;
+  double **arr = trans->values;
+  printf("Size: %ldx%ld\n", sz, sz);
+  for(int row=0; row<sz; row++)
+  {
+    for(int col=0; col<sz; col++)
+      { printf("%f ", arr[row][col]); }
+    printf("\n");
+  }
 }

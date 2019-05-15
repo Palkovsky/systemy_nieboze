@@ -19,7 +19,7 @@ typedef struct Image
 typedef struct Image_Transform
 {
   long size;
-  float **value;
+  double **values;
 } Image_Transform;
 
 // Interface for image-manipulation
