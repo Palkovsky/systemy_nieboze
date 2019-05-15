@@ -1,4 +1,4 @@
-# Autor tego formatu bedzie wyslany do Choroszczy
+# Autor tego formatu będzie wysłany do Choroszczy
 ![rabanko](https://thumbs.gfycat.com/ThirstyDirtyFireant.webp)
 
 
