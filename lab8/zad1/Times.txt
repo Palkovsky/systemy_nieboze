@@ -1,3 +1,6 @@
+Mój komputer ma tylko dwa rdzenie, a wątki które tu wykonujemy są CPU-bound. Z tego powodu
+widoczne zyski czasowe otrzymujemy przy przejściu z jednego wątka na dwa. Zwiększanie tej liczby
+dodaje niepotrzebny narzut czasowy związany z przełączaniem się wątków.
 
 ==== IMAGE INFO ====
 Img name: # created by 'xv balloons_bw.tif'
