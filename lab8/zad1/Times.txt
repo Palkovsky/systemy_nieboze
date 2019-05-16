@@ -1,0 +1,553 @@
+Przyspieszenie nie jest zbyt widoczne. Moze to wynikac z tego, ze
+moj komputer ma tylko 2 rdzenie, a uruchamiane watki sa CPU bound.
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 3x3
+Split type: block
+==== THREAD COUNT: 1 ====
+Thread 0 took 68189us.
+OVERALL: 68706us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 3x3
+Split type: block
+==== THREAD COUNT: 2 ====
+Thread 0 took 63171us.
+Thread 1 took 67952us.
+OVERALL: 68182us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 3x3
+Split type: block
+==== THREAD COUNT: 4 ====
+Thread 0 took 61173us.
+Thread 1 took 58919us.
+Thread 2 took 69127us.
+Thread 3 took 62104us.
+OVERALL: 72039us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 3x3
+Split type: block
+==== THREAD COUNT: 8 ====
+Thread 0 took 66833us.
+Thread 1 took 59230us.
+Thread 2 took 74182us.
+Thread 3 took 59030us.
+Thread 4 took 85859us.
+Thread 5 took 87733us.
+Thread 6 took 90795us.
+Thread 7 took 78868us.
+OVERALL: 95514us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 5x5
+Split type: block
+==== THREAD COUNT: 1 ====
+Thread 0 took 224182us.
+OVERALL: 224431us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 5x5
+Split type: block
+==== THREAD COUNT: 2 ====
+Thread 0 took 191322us.
+Thread 1 took 185465us.
+OVERALL: 192905us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 5x5
+Split type: block
+==== THREAD COUNT: 4 ====
+Thread 0 took 256089us.
+Thread 1 took 252053us.
+Thread 2 took 252175us.
+Thread 3 took 245295us.
+OVERALL: 265839us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 5x5
+Split type: block
+==== THREAD COUNT: 8 ====
+Thread 0 took 182663us.
+Thread 1 took 184831us.
+Thread 2 took 196265us.
+Thread 3 took 172504us.
+Thread 4 took 182480us.
+Thread 5 took 210257us.
+Thread 6 took 167172us.
+Thread 7 took 178276us.
+OVERALL: 214848us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 15x15
+Split type: block
+==== THREAD COUNT: 1 ====
+Thread 0 took 2931696us.
+OVERALL: 2931973us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 15x15
+Split type: block
+==== THREAD COUNT: 2 ====
+Thread 0 took 2944584us.
+Thread 1 took 2915984us.
+OVERALL: 2950197us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 15x15
+Split type: block
+==== THREAD COUNT: 4 ====
+Thread 0 took 2462040us.
+Thread 1 took 2500208us.
+Thread 2 took 2541300us.
+Thread 3 took 2443472us.
+OVERALL: 2544259us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 15x15
+Split type: block
+==== THREAD COUNT: 8 ====
+Thread 0 took 2379534us.
+Thread 1 took 2384665us.
+Thread 2 took 2372471us.
+Thread 3 took 2405314us.
+Thread 4 took 2289544us.
+Thread 5 took 2406330us.
+Thread 6 took 2436889us.
+Thread 7 took 2305236us.
+OVERALL: 2437202us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 30x30
+Split type: block
+==== THREAD COUNT: 1 ====
+Thread 0 took 11415739us.
+OVERALL: 11416657us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 30x30
+Split type: block
+==== THREAD COUNT: 2 ====
+Thread 0 took 8480478us.
+Thread 1 took 8440252us.
+OVERALL: 8484688us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 30x30
+Split type: block
+==== THREAD COUNT: 4 ====
+Thread 0 took 7952430us.
+Thread 1 took 8015914us.
+Thread 2 took 8012608us.
+Thread 3 took 7877571us.
+OVERALL: 8023670us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 30x30
+Split type: block
+==== THREAD COUNT: 8 ====
+Thread 0 took 7751766us.
+Thread 1 took 7752451us.
+Thread 2 took 7758935us.
+Thread 3 took 7716446us.
+Thread 4 took 7716018us.
+Thread 5 took 7771759us.
+Thread 6 took 7772954us.
+Thread 7 took 7605757us.
+OVERALL: 7782084us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 60x60
+Split type: block
+==== THREAD COUNT: 1 ====
+Thread 0 took 30242947us.
+OVERALL: 30243224us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 60x60
+Split type: block
+==== THREAD COUNT: 2 ====
+Thread 0 took 30550870us.
+Thread 1 took 30261560us.
+OVERALL: 30555237us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 60x60
+Split type: block
+==== THREAD COUNT: 4 ====
+Thread 0 took 28851329us.
+Thread 1 took 28888502us.
+Thread 2 took 28900058us.
+Thread 3 took 28377779us.
+OVERALL: 28903339us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 60x60
+Split type: block
+==== THREAD COUNT: 8 ====
+Thread 0 took 29819081us.
+Thread 1 took 29911844us.
+Thread 2 took 29594156us.
+Thread 3 took 29872615us.
+Thread 4 took 29853775us.
+Thread 5 took 29809593us.
+Thread 6 took 29919441us.
+Thread 7 took 27948734us.
+OVERALL: 29934111us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 3x3
+Split type: interleaved
+==== THREAD COUNT: 1 ====
+Thread 0 took 124364us.
+OVERALL: 124636us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 3x3
+Split type: interleaved
+==== THREAD COUNT: 2 ====
+Thread 0 took 74805us.
+Thread 1 took 79739us.
+OVERALL: 82443us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 3x3
+Split type: interleaved
+==== THREAD COUNT: 4 ====
+Thread 0 took 73344us.
+Thread 1 took 67386us.
+Thread 2 took 82223us.
+Thread 3 took 80010us.
+OVERALL: 87674us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 3x3
+Split type: interleaved
+==== THREAD COUNT: 8 ====
+Thread 0 took 47518us.
+Thread 1 took 53229us.
+Thread 2 took 57195us.
+Thread 3 took 57928us.
+Thread 4 took 60890us.
+Thread 5 took 69710us.
+Thread 6 took 82499us.
+Thread 7 took 67185us.
+OVERALL: 82853us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 5x5
+Split type: interleaved
+==== THREAD COUNT: 1 ====
+Thread 0 took 251301us.
+OVERALL: 251604us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 5x5
+Split type: interleaved
+==== THREAD COUNT: 2 ====
+Thread 0 took 326633us.
+Thread 1 took 332971us.
+OVERALL: 333085us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 5x5
+Split type: interleaved
+==== THREAD COUNT: 4 ====
+Thread 0 took 208693us.
+Thread 1 took 210408us.
+Thread 2 took 211611us.
+Thread 3 took 218136us.
+OVERALL: 222165us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 5x5
+Split type: interleaved
+==== THREAD COUNT: 8 ====
+Thread 0 took 314331us.
+Thread 1 took 313544us.
+Thread 2 took 311621us.
+Thread 3 took 321536us.
+Thread 4 took 299377us.
+Thread 5 took 319013us.
+Thread 6 took 320333us.
+Thread 7 took 333659us.
+OVERALL: 339929us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 15x15
+Split type: interleaved
+==== THREAD COUNT: 1 ====
+Thread 0 took 2116616us.
+OVERALL: 2117052us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 15x15
+Split type: interleaved
+==== THREAD COUNT: 2 ====
+Thread 0 took 2097906us.
+Thread 1 took 2112802us.
+OVERALL: 2112953us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 15x15
+Split type: interleaved
+==== THREAD COUNT: 4 ====
+Thread 0 took 2081827us.
+Thread 1 took 2039175us.
+Thread 2 took 2095791us.
+Thread 3 took 2094142us.
+OVERALL: 2098712us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 15x15
+Split type: interleaved
+==== THREAD COUNT: 8 ====
+Thread 0 took 1819961us.
+Thread 1 took 1835401us.
+Thread 2 took 1802707us.
+Thread 3 took 1826915us.
+Thread 4 took 1827072us.
+Thread 5 took 1798712us.
+Thread 6 took 1857634us.
+Thread 7 took 1851387us.
+OVERALL: 1859800us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 30x30
+Split type: interleaved
+==== THREAD COUNT: 1 ====
+Thread 0 took 8120798us.
+OVERALL: 8121338us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 30x30
+Split type: interleaved
+==== THREAD COUNT: 2 ====
+Thread 0 took 8535677us.
+Thread 1 took 8560291us.
+OVERALL: 8560396us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 30x30
+Split type: interleaved
+==== THREAD COUNT: 4 ====
+Thread 0 took 8283415us.
+Thread 1 took 8291534us.
+Thread 2 took 8261560us.
+Thread 3 took 8276762us.
+OVERALL: 8299081us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 30x30
+Split type: interleaved
+==== THREAD COUNT: 8 ====
+Thread 0 took 7546933us.
+Thread 1 took 7546623us.
+Thread 2 took 7577609us.
+Thread 3 took 7594027us.
+Thread 4 took 7578082us.
+Thread 5 took 7589546us.
+Thread 6 took 7600601us.
+Thread 7 took 7617859us.
+OVERALL: 7620854us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 60x60
+Split type: interleaved
+==== THREAD COUNT: 1 ====
+Thread 0 took 32460040us.
+OVERALL: 32460321us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 60x60
+Split type: interleaved
+==== THREAD COUNT: 2 ====
+Thread 0 took 30264757us.
+Thread 1 took 30202014us.
+OVERALL: 30267875us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 60x60
+Split type: interleaved
+==== THREAD COUNT: 4 ====
+Thread 0 took 30606544us.
+Thread 1 took 30522447us.
+Thread 2 took 30522886us.
+Thread 3 took 30612240us.
+OVERALL: 30617924us.
+
+
+==== IMAGE INFO ====
+Img name: # created by 'xv balloons_bw.tif'
+Dimen: 640x480
+Colors: 255
+Filter size: 60x60
+Split type: interleaved
+==== THREAD COUNT: 8 ====
+Thread 0 took 31695655us.
+Thread 1 took 31625369us.
+Thread 2 took 31626761us.
+Thread 3 took 31727785us.
+Thread 4 took 31649685us.
+Thread 5 took 31428450us.
+Thread 6 took 31439178us.
+Thread 7 took 31638551us.
+OVERALL: 31740266us.
+
+

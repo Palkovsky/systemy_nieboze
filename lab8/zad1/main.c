@@ -66,18 +66,21 @@ int main(int argc, char **argv)
 
   // Load image and image filter.
   Image_Transform *trans = malloc(sizeof(Image_Transform));
-  Image *img = malloc(sizeof(Image));
   if(load_transform(trans, filter_path) != IMG_OK)
     { printf("Unable to load filter file %s.\n", filter_path);  exit(1); }
-  print_transform(trans);
+  //print_transform(trans);
 
+  Image *img = malloc(sizeof(Image));
   if(load_image(img, input_path) != IMG_OK)
     { printf("Unable to load image from %s.\n", input_path); exit(1); }
   print_image(img);
+  printf("Filter size: %ldx%ld\n", trans->size, trans->size);
+  printf("Split type: %s\n", argv[2]);
 
   unsigned long start_time = get_timestamp();
 
   // Start threads
+  printf("==== THREAD COUNT: %ld ====\n", thread_count);
   threads = calloc(thread_count, sizeof(pthread_t));
   for(long i=0; i<thread_count; i++)
   {
@@ -103,11 +106,11 @@ int main(int argc, char **argv)
       { printf("Error while joining %ld thread.\n", i); exit(1); }
 
     unsigned long time = *((unsigned long*) ret);
-    printf("Thread %ld took %ld.\n", i, time);
+    printf("Thread %ld took %ldus.\n", i, time);
     free(ret);
   }
 
-  printf("Overall time taken: %ld\n", get_timestamp() - start_time);
+  printf("OVERALL: %ldus.\n", get_timestamp() - start_time);
 
   // Save transformed image to output file.
   if(save_image(img, output_path) != IMG_OK)
@@ -136,7 +139,7 @@ void *thread_logic(void *_arg)
   if(arg->type == SPLIT_BLOCK)
   {
     long x0 = k * ceil(img->width/arg->thread_count);
-    long x1 = (k+1) * ceil(img->width/arg->thread_count) - 1;
+    long x1 = (k + 1 == arg->thread_count) ? img->width - 1 : (k+1) * ceil(img->width/arg->thread_count) - 1;
     //printf("Thread %ld: Img width: %ld, Thread Count: %ld\n", k, img->width, arg->thread_count);
     //printf("Thread %ld: Start %ld, End: %ld\n", k, x0, x1);
     while(x0 <= x1)
@@ -177,10 +180,10 @@ unsigned long get_timestamp()
 
 void print_image(Image *img)
 {
+  printf("==== IMAGE INFO ====\n");
   printf("Img name: %s\n", img->name);
   printf("Dimen: %ldx%ld\n", img->width, img->height);
   printf("Colors: %ld\n", img->colors);
-  printf("Size: %ld\n", sizeof(img->pixels));
 }
 
 void print_transform(Image_Transform *trans)
