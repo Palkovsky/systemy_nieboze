@@ -6,8 +6,6 @@
 
 #include "images.h"
 
-#define MAX(x, y) (((x) > (y)) ? (x) : (y))
-
 /*
  * load_image()
  * Opens file and parses file headers.

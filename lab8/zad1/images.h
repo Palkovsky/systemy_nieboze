@@ -7,6 +7,9 @@
 #define IMG_TRANSFORM_ERR 3
 #define IMG_INVALID_FILE 4
 
+#define MAX(x, y) (((x) > (y)) ? (x) : (y))
+#define MIN(x, y) (((x) < (y)) ? (x) : (y))
+
 typedef struct Image
 {
   char name[256];
