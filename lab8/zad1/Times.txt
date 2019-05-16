@@ -1,5 +1,3 @@
-Przyspieszenie nie jest zbyt widoczne. Moze to wynikac z tego, ze
-moj komputer ma tylko 2 rdzenie, a uruchamiane watki sa CPU bound.
 
 ==== IMAGE INFO ====
 Img name: # created by 'xv balloons_bw.tif'
@@ -8,8 +6,8 @@ Colors: 255
 Filter size: 3x3
 Split type: block
 ==== THREAD COUNT: 1 ====
-Thread 0 took 68189us.
-OVERALL: 68706us.
+Thread 0 took 72841us.
+OVERALL: 74158us.
 
 
 ==== IMAGE INFO ====
@@ -19,9 +17,9 @@ Colors: 255
 Filter size: 3x3
 Split type: block
 ==== THREAD COUNT: 2 ====
-Thread 0 took 63171us.
-Thread 1 took 67952us.
-OVERALL: 68182us.
+Thread 0 took 46630us.
+Thread 1 took 44500us.
+OVERALL: 47399us.
 
 
 ==== IMAGE INFO ====
@@ -31,11 +29,11 @@ Colors: 255
 Filter size: 3x3
 Split type: block
 ==== THREAD COUNT: 4 ====
-Thread 0 took 61173us.
-Thread 1 took 58919us.
-Thread 2 took 69127us.
-Thread 3 took 62104us.
-OVERALL: 72039us.
+Thread 0 took 42836us.
+Thread 1 took 42541us.
+Thread 2 took 38765us.
+Thread 3 took 30093us.
+OVERALL: 50288us.
 
 
 ==== IMAGE INFO ====
@@ -45,15 +43,15 @@ Colors: 255
 Filter size: 3x3
 Split type: block
 ==== THREAD COUNT: 8 ====
-Thread 0 took 66833us.
-Thread 1 took 59230us.
-Thread 2 took 74182us.
-Thread 3 took 59030us.
-Thread 4 took 85859us.
-Thread 5 took 87733us.
-Thread 6 took 90795us.
-Thread 7 took 78868us.
-OVERALL: 95514us.
+Thread 0 took 44613us.
+Thread 1 took 40825us.
+Thread 2 took 35199us.
+Thread 3 took 37678us.
+Thread 4 took 17810us.
+Thread 5 took 16040us.
+Thread 6 took 18367us.
+Thread 7 took 29365us.
+OVERALL: 48089us.
 
 
 ==== IMAGE INFO ====
@@ -63,8 +61,8 @@ Colors: 255
 Filter size: 5x5
 Split type: block
 ==== THREAD COUNT: 1 ====
-Thread 0 took 224182us.
-OVERALL: 224431us.
+Thread 0 took 207357us.
+OVERALL: 207903us.
 
 
 ==== IMAGE INFO ====
@@ -74,9 +72,9 @@ Colors: 255
 Filter size: 5x5
 Split type: block
 ==== THREAD COUNT: 2 ====
-Thread 0 took 191322us.
-Thread 1 took 185465us.
-OVERALL: 192905us.
+Thread 0 took 102202us.
+Thread 1 took 103139us.
+OVERALL: 104030us.
 
 
 ==== IMAGE INFO ====
@@ -86,11 +84,11 @@ Colors: 255
 Filter size: 5x5
 Split type: block
 ==== THREAD COUNT: 4 ====
-Thread 0 took 256089us.
-Thread 1 took 252053us.
-Thread 2 took 252175us.
-Thread 3 took 245295us.
-OVERALL: 265839us.
+Thread 0 took 104239us.
+Thread 1 took 104968us.
+Thread 2 took 83523us.
+Thread 3 took 51024us.
+OVERALL: 107698us.
 
 
 ==== IMAGE INFO ====
@@ -100,15 +98,15 @@ Colors: 255
 Filter size: 5x5
 Split type: block
 ==== THREAD COUNT: 8 ====
-Thread 0 took 182663us.
-Thread 1 took 184831us.
-Thread 2 took 196265us.
-Thread 3 took 172504us.
-Thread 4 took 182480us.
-Thread 5 took 210257us.
-Thread 6 took 167172us.
-Thread 7 took 178276us.
-OVERALL: 214848us.
+Thread 0 took 95474us.
+Thread 1 took 94141us.
+Thread 2 took 90049us.
+Thread 3 took 86914us.
+Thread 4 took 78173us.
+Thread 5 took 74334us.
+Thread 6 took 68595us.
+Thread 7 took 71472us.
+OVERALL: 96888us.
 
 
 ==== IMAGE INFO ====
@@ -118,8 +116,8 @@ Colors: 255
 Filter size: 15x15
 Split type: block
 ==== THREAD COUNT: 1 ====
-Thread 0 took 2931696us.
-OVERALL: 2931973us.
+Thread 0 took 1543132us.
+OVERALL: 1543856us.
 
 
 ==== IMAGE INFO ====
@@ -129,9 +127,9 @@ Colors: 255
 Filter size: 15x15
 Split type: block
 ==== THREAD COUNT: 2 ====
-Thread 0 took 2944584us.
-Thread 1 took 2915984us.
-OVERALL: 2950197us.
+Thread 0 took 842885us.
+Thread 1 took 842805us.
+OVERALL: 846516us.
 
 
 ==== IMAGE INFO ====
@@ -141,11 +139,11 @@ Colors: 255
 Filter size: 15x15
 Split type: block
 ==== THREAD COUNT: 4 ====
-Thread 0 took 2462040us.
-Thread 1 took 2500208us.
-Thread 2 took 2541300us.
-Thread 3 took 2443472us.
-OVERALL: 2544259us.
+Thread 0 took 857688us.
+Thread 1 took 835093us.
+Thread 2 took 844145us.
+Thread 3 took 848757us.
+OVERALL: 858000us.
 
 
 ==== IMAGE INFO ====
@@ -155,15 +153,15 @@ Colors: 255
 Filter size: 15x15
 Split type: block
 ==== THREAD COUNT: 8 ====
-Thread 0 took 2379534us.
-Thread 1 took 2384665us.
-Thread 2 took 2372471us.
-Thread 3 took 2405314us.
-Thread 4 took 2289544us.
-Thread 5 took 2406330us.
-Thread 6 took 2436889us.
-Thread 7 took 2305236us.
-OVERALL: 2437202us.
+Thread 0 took 862082us.
+Thread 1 took 862205us.
+Thread 2 took 856715us.
+Thread 3 took 858170us.
+Thread 4 took 828217us.
+Thread 5 took 847963us.
+Thread 6 took 823379us.
+Thread 7 took 831954us.
+OVERALL: 867046us.
 
 
 ==== IMAGE INFO ====
@@ -173,8 +171,8 @@ Colors: 255
 Filter size: 30x30
 Split type: block
 ==== THREAD COUNT: 1 ====
-Thread 0 took 11415739us.
-OVERALL: 11416657us.
+Thread 0 took 6048758us.
+OVERALL: 6049059us.
 
 
 ==== IMAGE INFO ====
@@ -184,9 +182,9 @@ Colors: 255
 Filter size: 30x30
 Split type: block
 ==== THREAD COUNT: 2 ====
-Thread 0 took 8480478us.
-Thread 1 took 8440252us.
-OVERALL: 8484688us.
+Thread 0 took 3323377us.
+Thread 1 took 3299192us.
+OVERALL: 3323617us.
 
 
 ==== IMAGE INFO ====
@@ -196,11 +194,11 @@ Colors: 255
 Filter size: 30x30
 Split type: block
 ==== THREAD COUNT: 4 ====
-Thread 0 took 7952430us.
-Thread 1 took 8015914us.
-Thread 2 took 8012608us.
-Thread 3 took 7877571us.
-OVERALL: 8023670us.
+Thread 0 took 3273687us.
+Thread 1 took 3271422us.
+Thread 2 took 3259081us.
+Thread 3 took 3240259us.
+OVERALL: 3277507us.
 
 
 ==== IMAGE INFO ====
@@ -210,15 +208,15 @@ Colors: 255
 Filter size: 30x30
 Split type: block
 ==== THREAD COUNT: 8 ====
-Thread 0 took 7751766us.
-Thread 1 took 7752451us.
-Thread 2 took 7758935us.
-Thread 3 took 7716446us.
-Thread 4 took 7716018us.
-Thread 5 took 7771759us.
-Thread 6 took 7772954us.
-Thread 7 took 7605757us.
-OVERALL: 7782084us.
+Thread 0 took 3281303us.
+Thread 1 took 3288072us.
+Thread 2 took 3281089us.
+Thread 3 took 3265760us.
+Thread 4 took 3287138us.
+Thread 5 took 3252801us.
+Thread 6 took 3242037us.
+Thread 7 took 3024035us.
+OVERALL: 3293156us.
 
 
 ==== IMAGE INFO ====
@@ -228,8 +226,8 @@ Colors: 255
 Filter size: 60x60
 Split type: block
 ==== THREAD COUNT: 1 ====
-Thread 0 took 30242947us.
-OVERALL: 30243224us.
+Thread 0 took 23950284us.
+OVERALL: 23951271us.
 
 
 ==== IMAGE INFO ====
@@ -239,9 +237,9 @@ Colors: 255
 Filter size: 60x60
 Split type: block
 ==== THREAD COUNT: 2 ====
-Thread 0 took 30550870us.
-Thread 1 took 30261560us.
-OVERALL: 30555237us.
+Thread 0 took 13012634us.
+Thread 1 took 12784960us.
+OVERALL: 13013000us.
 
 
 ==== IMAGE INFO ====
@@ -251,11 +249,11 @@ Colors: 255
 Filter size: 60x60
 Split type: block
 ==== THREAD COUNT: 4 ====
-Thread 0 took 28851329us.
-Thread 1 took 28888502us.
-Thread 2 took 28900058us.
-Thread 3 took 28377779us.
-OVERALL: 28903339us.
+Thread 0 took 12937665us.
+Thread 1 took 12937644us.
+Thread 2 took 12853413us.
+Thread 3 took 12706386us.
+OVERALL: 12945516us.
 
 
 ==== IMAGE INFO ====
@@ -265,15 +263,15 @@ Colors: 255
 Filter size: 60x60
 Split type: block
 ==== THREAD COUNT: 8 ====
-Thread 0 took 29819081us.
-Thread 1 took 29911844us.
-Thread 2 took 29594156us.
-Thread 3 took 29872615us.
-Thread 4 took 29853775us.
-Thread 5 took 29809593us.
-Thread 6 took 29919441us.
-Thread 7 took 27948734us.
-OVERALL: 29934111us.
+Thread 0 took 12922406us.
+Thread 1 took 12904602us.
+Thread 2 took 12936097us.
+Thread 3 took 12937021us.
+Thread 4 took 12926372us.
+Thread 5 took 12921922us.
+Thread 6 took 12903741us.
+Thread 7 took 11711083us.
+OVERALL: 12962175us.
 
 
 ==== IMAGE INFO ====
@@ -283,8 +281,8 @@ Colors: 255
 Filter size: 3x3
 Split type: interleaved
 ==== THREAD COUNT: 1 ====
-Thread 0 took 124364us.
-OVERALL: 124636us.
+Thread 0 took 71938us.
+OVERALL: 72800us.
 
 
 ==== IMAGE INFO ====
@@ -294,9 +292,9 @@ Colors: 255
 Filter size: 3x3
 Split type: interleaved
 ==== THREAD COUNT: 2 ====
-Thread 0 took 74805us.
-Thread 1 took 79739us.
-OVERALL: 82443us.
+Thread 0 took 33772us.
+Thread 1 took 34158us.
+OVERALL: 35879us.
 
 
 ==== IMAGE INFO ====
@@ -306,11 +304,11 @@ Colors: 255
 Filter size: 3x3
 Split type: interleaved
 ==== THREAD COUNT: 4 ====
-Thread 0 took 73344us.
-Thread 1 took 67386us.
-Thread 2 took 82223us.
-Thread 3 took 80010us.
-OVERALL: 87674us.
+Thread 0 took 34891us.
+Thread 1 took 33940us.
+Thread 2 took 26647us.
+Thread 3 took 34757us.
+OVERALL: 36529us.
 
 
 ==== IMAGE INFO ====
@@ -320,15 +318,15 @@ Colors: 255
 Filter size: 3x3
 Split type: interleaved
 ==== THREAD COUNT: 8 ====
-Thread 0 took 47518us.
-Thread 1 took 53229us.
-Thread 2 took 57195us.
-Thread 3 took 57928us.
-Thread 4 took 60890us.
-Thread 5 took 69710us.
-Thread 6 took 82499us.
-Thread 7 took 67185us.
-OVERALL: 82853us.
+Thread 0 took 44577us.
+Thread 1 took 44083us.
+Thread 2 took 38881us.
+Thread 3 took 37660us.
+Thread 4 took 38820us.
+Thread 5 took 10390us.
+Thread 6 took 16021us.
+Thread 7 took 10212us.
+OVERALL: 48919us.
 
 
 ==== IMAGE INFO ====
@@ -338,8 +336,8 @@ Colors: 255
 Filter size: 5x5
 Split type: interleaved
 ==== THREAD COUNT: 1 ====
-Thread 0 took 251301us.
-OVERALL: 251604us.
+Thread 0 took 168766us.
+OVERALL: 169277us.
 
 
 ==== IMAGE INFO ====
@@ -349,9 +347,9 @@ Colors: 255
 Filter size: 5x5
 Split type: interleaved
 ==== THREAD COUNT: 2 ====
-Thread 0 took 326633us.
-Thread 1 took 332971us.
-OVERALL: 333085us.
+Thread 0 took 96327us.
+Thread 1 took 94815us.
+OVERALL: 97597us.
 
 
 ==== IMAGE INFO ====
@@ -361,11 +359,11 @@ Colors: 255
 Filter size: 5x5
 Split type: interleaved
 ==== THREAD COUNT: 4 ====
-Thread 0 took 208693us.
-Thread 1 took 210408us.
-Thread 2 took 211611us.
-Thread 3 took 218136us.
-OVERALL: 222165us.
+Thread 0 took 94217us.
+Thread 1 took 87144us.
+Thread 2 took 88546us.
+Thread 3 took 94279us.
+OVERALL: 97853us.
 
 
 ==== IMAGE INFO ====
@@ -375,15 +373,15 @@ Colors: 255
 Filter size: 5x5
 Split type: interleaved
 ==== THREAD COUNT: 8 ====
-Thread 0 took 314331us.
-Thread 1 took 313544us.
-Thread 2 took 311621us.
-Thread 3 took 321536us.
-Thread 4 took 299377us.
-Thread 5 took 319013us.
-Thread 6 took 320333us.
-Thread 7 took 333659us.
-OVERALL: 339929us.
+Thread 0 took 96000us.
+Thread 1 took 96204us.
+Thread 2 took 94453us.
+Thread 3 took 76839us.
+Thread 4 took 78648us.
+Thread 5 took 53936us.
+Thread 6 took 54992us.
+Thread 7 took 70588us.
+OVERALL: 97462us.
 
 
 ==== IMAGE INFO ====
@@ -393,8 +391,8 @@ Colors: 255
 Filter size: 15x15
 Split type: interleaved
 ==== THREAD COUNT: 1 ====
-Thread 0 took 2116616us.
-OVERALL: 2117052us.
+Thread 0 took 1529522us.
+OVERALL: 1530057us.
 
 
 ==== IMAGE INFO ====
@@ -404,9 +402,9 @@ Colors: 255
 Filter size: 15x15
 Split type: interleaved
 ==== THREAD COUNT: 2 ====
-Thread 0 took 2097906us.
-Thread 1 took 2112802us.
-OVERALL: 2112953us.
+Thread 0 took 850013us.
+Thread 1 took 849123us.
+OVERALL: 853785us.
 
 
 ==== IMAGE INFO ====
@@ -416,11 +414,11 @@ Colors: 255
 Filter size: 15x15
 Split type: interleaved
 ==== THREAD COUNT: 4 ====
-Thread 0 took 2081827us.
-Thread 1 took 2039175us.
-Thread 2 took 2095791us.
-Thread 3 took 2094142us.
-OVERALL: 2098712us.
+Thread 0 took 823358us.
+Thread 1 took 825403us.
+Thread 2 took 834001us.
+Thread 3 took 828021us.
+OVERALL: 841561us.
 
 
 ==== IMAGE INFO ====
@@ -430,15 +428,15 @@ Colors: 255
 Filter size: 15x15
 Split type: interleaved
 ==== THREAD COUNT: 8 ====
-Thread 0 took 1819961us.
-Thread 1 took 1835401us.
-Thread 2 took 1802707us.
-Thread 3 took 1826915us.
-Thread 4 took 1827072us.
-Thread 5 took 1798712us.
-Thread 6 took 1857634us.
-Thread 7 took 1851387us.
-OVERALL: 1859800us.
+Thread 0 took 824699us.
+Thread 1 took 816499us.
+Thread 2 took 812534us.
+Thread 3 took 825013us.
+Thread 4 took 809361us.
+Thread 5 took 800914us.
+Thread 6 took 811527us.
+Thread 7 took 817428us.
+OVERALL: 833635us.
 
 
 ==== IMAGE INFO ====
@@ -448,8 +446,8 @@ Colors: 255
 Filter size: 30x30
 Split type: interleaved
 ==== THREAD COUNT: 1 ====
-Thread 0 took 8120798us.
-OVERALL: 8121338us.
+Thread 0 took 6028190us.
+OVERALL: 6029102us.
 
 
 ==== IMAGE INFO ====
@@ -459,9 +457,9 @@ Colors: 255
 Filter size: 30x30
 Split type: interleaved
 ==== THREAD COUNT: 2 ====
-Thread 0 took 8535677us.
-Thread 1 took 8560291us.
-OVERALL: 8560396us.
+Thread 0 took 3284493us.
+Thread 1 took 3269119us.
+OVERALL: 3284687us.
 
 
 ==== IMAGE INFO ====
@@ -471,11 +469,11 @@ Colors: 255
 Filter size: 30x30
 Split type: interleaved
 ==== THREAD COUNT: 4 ====
-Thread 0 took 8283415us.
-Thread 1 took 8291534us.
-Thread 2 took 8261560us.
-Thread 3 took 8276762us.
-OVERALL: 8299081us.
+Thread 0 took 3300731us.
+Thread 1 took 3270794us.
+Thread 2 took 3262716us.
+Thread 3 took 3284291us.
+OVERALL: 3301408us.
 
 
 ==== IMAGE INFO ====
@@ -485,15 +483,15 @@ Colors: 255
 Filter size: 30x30
 Split type: interleaved
 ==== THREAD COUNT: 8 ====
-Thread 0 took 7546933us.
-Thread 1 took 7546623us.
-Thread 2 took 7577609us.
-Thread 3 took 7594027us.
-Thread 4 took 7578082us.
-Thread 5 took 7589546us.
-Thread 6 took 7600601us.
-Thread 7 took 7617859us.
-OVERALL: 7620854us.
+Thread 0 took 3433051us.
+Thread 1 took 3437093us.
+Thread 2 took 3413301us.
+Thread 3 took 3425560us.
+Thread 4 took 3399496us.
+Thread 5 took 3405587us.
+Thread 6 took 3394628us.
+Thread 7 took 3114722us.
+OVERALL: 3441885us.
 
 
 ==== IMAGE INFO ====
@@ -503,8 +501,8 @@ Colors: 255
 Filter size: 60x60
 Split type: interleaved
 ==== THREAD COUNT: 1 ====
-Thread 0 took 32460040us.
-OVERALL: 32460321us.
+Thread 0 took 24029733us.
+OVERALL: 24030797us.
 
 
 ==== IMAGE INFO ====
@@ -514,9 +512,9 @@ Colors: 255
 Filter size: 60x60
 Split type: interleaved
 ==== THREAD COUNT: 2 ====
-Thread 0 took 30264757us.
-Thread 1 took 30202014us.
-OVERALL: 30267875us.
+Thread 0 took 12923821us.
+Thread 1 took 12889427us.
+OVERALL: 12924023us.
 
 
 ==== IMAGE INFO ====
@@ -526,11 +524,11 @@ Colors: 255
 Filter size: 60x60
 Split type: interleaved
 ==== THREAD COUNT: 4 ====
-Thread 0 took 30606544us.
-Thread 1 took 30522447us.
-Thread 2 took 30522886us.
-Thread 3 took 30612240us.
-OVERALL: 30617924us.
+Thread 0 took 12979337us.
+Thread 1 took 12947124us.
+Thread 2 took 12932105us.
+Thread 3 took 12838439us.
+OVERALL: 12979939us.
 
 
 ==== IMAGE INFO ====
@@ -540,14 +538,14 @@ Colors: 255
 Filter size: 60x60
 Split type: interleaved
 ==== THREAD COUNT: 8 ====
-Thread 0 took 31695655us.
-Thread 1 took 31625369us.
-Thread 2 took 31626761us.
-Thread 3 took 31727785us.
-Thread 4 took 31649685us.
-Thread 5 took 31428450us.
-Thread 6 took 31439178us.
-Thread 7 took 31638551us.
-OVERALL: 31740266us.
+Thread 0 took 12940991us.
+Thread 1 took 12933411us.
+Thread 2 took 12921459us.
+Thread 3 took 12895043us.
+Thread 4 took 12919950us.
+Thread 5 took 12880422us.
+Thread 6 took 12871780us.
+Thread 7 took 12514277us.
+OVERALL: 12962474us.
 
 
