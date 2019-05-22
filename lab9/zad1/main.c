@@ -125,11 +125,9 @@ void spawn_threads(pthread_t *tids, int size, void *(*routine) (void*), T_Arg *a
 {
     for(int i=0; i < size; i++)
     {
-
       T_Arg *targ = malloc(sizeof(T_Arg));
       memcpy(targ, arg, sizeof(T_Arg));
       targ->identifier = i;
-      
       if(pthread_create(&tids[i], NULL, routine, targ) < 0)
       {
           printf("Unable to spawn thread: %s\n", strerror(errno));
