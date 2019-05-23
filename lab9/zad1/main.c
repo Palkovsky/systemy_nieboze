@@ -226,9 +226,8 @@ void *passenger_routine(void* arg)
             {passenger_test_stop_cond(targ);}
 
         /* While cart not accepting */
-        while((*targ->cart)->cart_state != STATE_ACCEPTING) {
-            passenger_test_stop_cond(targ);
-        }
+        while((*targ->cart)->cart_state != STATE_ACCEPTING || (*targ->cart)->passengers_inside >= targ->passenger_cap)
+            { passenger_test_stop_cond(targ);}
 
         pthread_mutex_lock(targ->mutex[MUTEX_ENTER]);
         {
