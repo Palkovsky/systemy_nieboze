@@ -1,4 +1,4 @@
-W tym rozwi±zaniu s± mozliwe sytuacje wyscigu. Nie braæ st±d lepiej.
+W tym rozwiÄ…zaniu sÄ… mozliwe sytuacje wyscigu. Nie polecam.
 
-# Poziom trudno¶ci: Morderczy
+# Poziom trudnoÅ›ci: Morderczy
 ![zalamanie](https://thumbs.gfycat.com/PaltryFlawedCobra.webp)
