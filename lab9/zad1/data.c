@@ -19,7 +19,7 @@ Passenger *init_passenger_queue(int size)
     for(int i=0; i<size; i++)
     {
         current->passenger_id = i;
-        current->passenger_state = STATE_WAITING;
+        current->passenger_state = STATE_NOT_ACCEPTING;
 
         if(i > 0)
             { current->prev = current-1;}
@@ -46,8 +46,9 @@ Cart *init_roller_coaster(int size){
     for(int i=0; i<size; i++)
     {
         current->cart_id = i;
-        current->cart_state = STATE_WAITING;
+        current->cart_state = STATE_NOT_ACCEPTING;
         current->rides_done = 0;
+        current->passengers_inside = 0;
 
         if(i > 0)
             { current->prev = current-1;}
