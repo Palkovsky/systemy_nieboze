@@ -9,7 +9,6 @@
 #include <sys/epoll.h>
 #include <signal.h>
 
-
 #include "utils.h"
 
 /*
@@ -50,16 +49,15 @@ int            client_fds[MAX_CLIENTS] = {0}; // Holds FDs of connected sockets.
 
 int main(int argc, char **argv)
 {
+  pthread_t *listener_tid, *input_tid, *heartbeat_tid;
+  
   if(argc != 3)
     { print_usage(argv[0]); exit(1); }
 
   af_inet_port = strtoul(argv[1], NULL, 10);
   strcpy(af_unix_path, argv[2]);
-
   signal(SIGINT, exit_handler);
-
-  pthread_t *listener_tid, *input_tid, *heartbeat_tid;
-
+  
   listener_tid = spawn_thread(listener_thread,
                               "Unable to spawn socket listener thread.");
   input_tid = spawn_thread(input_thread,
@@ -74,7 +72,6 @@ int main(int argc, char **argv)
   return 0;
 }
 
-
 /*
  * Reads requests from sockets and responds.
  */
@@ -82,13 +79,6 @@ void handle_event(epoll_event *event)
 {
   size_t bytes_read;
   char buff[1 << 8];
-
-  if((event->events & EPOLLRDHUP) == EPOLLRDHUP)
-  {
-    printf("FD %d disconected.\n", event->data.fd);
-
-    return;
-  }
 
   if((event->events & EPOLLOUT) == EPOLLOUT)
   {
@@ -104,7 +94,7 @@ void handle_event(epoll_event *event)
 
 /*
  * Connection listener.
- * this thing got too bing
+ * this thing got too big
  */
 void *listener_thread(void *arg)
 {
