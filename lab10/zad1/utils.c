@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include <errno.h>
 
 #include "utils.h"
 
@@ -25,4 +26,28 @@ void join_thread(pthread_t *tid, const char *err)
     exit(1);
   }
   free(tid);
+}
+
+void print_msg(message msg)
+{
+  char typestr[1<<8];
+  switch(msg.type)
+  {
+  case MSG_REGISTER:
+    strcpy(typestr, "REGISTER");
+    break;
+  case MSG_REQUEST:
+    strcpy(typestr, "REQUEST");
+    break;
+  case MSG_RESPONSE:
+    strcpy(typestr, "RESPONSE");
+    break;
+  case MSG_PING:
+    strcpy(typestr, "PING");
+    break;
+  }
+  printf("MSG TYPE: %s\n", typestr);
+  printf("MSG BUFF: %s\n", msg.buff);
+  printf("MSG NUM: %ld\n", msg.num);
+  printf("MSG NUM SECONDARY: %ld\n", msg.num_sec);
 }

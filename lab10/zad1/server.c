@@ -31,7 +31,7 @@ void handle_event(epoll_event*);
  */
 void exit_handler(int);
 int add_epoll(int, int);
-int add_client_fd(int);
+int register_client(int, const char*);
 void print_usage(const char*);
 
 /*
@@ -42,22 +42,26 @@ static volatile int RUNNING = 1;
 /*
  * GLOBALS
  */
-unsigned short af_inet_port;
-char           af_unix_path[UNIX_PATH_MAX];
-int            client_fds[MAX_CLIENTS] = {0}; // Holds FDs of connected sockets.
+static unsigned short af_inet_port;
+static char           af_unix_path[UNIX_PATH_MAX];
 
+static int client_fds[MAX_CLIENTS] = {0};  // Holds FDs of connected sockets.
+static int client_busy[MAX_CLIENTS] = {0}; // Tells if FD is busy.
+static char client_hostname[MAX_CLIENTS][1 << 6]; // Hostname of FD.
+
+static int requests_sent = 0;
 
 int main(int argc, char **argv)
 {
   pthread_t *listener_tid, *input_tid, *heartbeat_tid;
-  
+
   if(argc != 3)
     { print_usage(argv[0]); exit(1); }
 
   af_inet_port = strtoul(argv[1], NULL, 10);
   strcpy(af_unix_path, argv[2]);
   signal(SIGINT, exit_handler);
-  
+
   listener_tid = spawn_thread(listener_thread,
                               "Unable to spawn socket listener thread.");
   input_tid = spawn_thread(input_thread,
@@ -77,17 +81,41 @@ int main(int argc, char **argv)
  */
 void handle_event(epoll_event *event)
 {
+  message msg;
   size_t bytes_read;
-  char buff[1 << 8];
+  int fd;
 
   if((event->events & EPOLLOUT) == EPOLLOUT)
   {
-    bytes_read = read(event->data.fd, buff, sizeof(buff));
-    if(bytes_read > 0)
+    fd = event->data.fd;
+    bytes_read = read(fd, &msg, sizeof(msg));
+
+    if(bytes_read == sizeof(message))
     {
-      printf("Reading file descriptor '%d' -- ", event->data.fd);
-      printf("%zd bytes read.\n", bytes_read);
-      printf("Read '%s'\n", buff);
+      switch(msg.type)
+      {
+      case MSG_REGISTER:
+        register_client(fd, msg.buff);
+        printf("======= NEW NODE =======\n");
+        printf("FD: %d | HOSTNAME: %s\n", fd, msg.buff);
+        printf("------------------------\n");
+
+        break;
+      case MSG_RESPONSE:
+        printf("======== %ld RESPONSE ========\n", msg.num);
+        printf("WORD COUNT: %ld\n", msg.num_sec);
+        printf("------------------------\n");
+
+        for(int i=0; i < MAX_CLIENTS; i++)
+        {
+          if(client_fds[i] == fd)
+            { client_busy[i]--; break; }
+        }
+
+        break;
+      default:
+        break;
+      }
     }
   }
 }
@@ -187,6 +215,10 @@ void *listener_thread(void *arg)
     exit(2);
   }
 
+  struct timeval tv;
+  tv.tv_sec = 3;
+  tv.tv_usec = 0;
+
   /*
    * MAIN SERVER LOOP
    */
@@ -201,17 +233,17 @@ void *listener_thread(void *arg)
     cli_fd = accept(inet_fd, (sockaddr*) &inet_cli, &addr_len);
     if(cli_fd >= 0)
     {
-      printf("INET FD: %d\n", cli_fd);
+      //printf("INET FD: %d\n", cli_fd);
+      setsockopt(cli_fd, SOL_SOCKET, SO_RCVTIMEO, (char*) &tv, sizeof(tv));
       add_epoll(epoll_fd, cli_fd);
-      add_client_fd(cli_fd);
     }
 
     cli_fd = accept(unix_fd, (sockaddr*) &unix_cli, &addr_len);
     if(cli_fd >= 0)
     {
-      printf("UNIX FD: %d\n", cli_fd);
+      //printf("UNIX FD: %d\n", cli_fd);
+      setsockopt(cli_fd, SOL_SOCKET, SO_RCVTIMEO, (char*) &tv, sizeof(tv));
       add_epoll(epoll_fd, cli_fd);
-      add_client_fd(cli_fd);
     }
 
     /*
@@ -234,7 +266,10 @@ void *listener_thread(void *arg)
 
 void *heartbeat_thread(void *arg)
 {
-  char *buff = "buff";
+  message msg;
+
+  memset(&msg, 0, sizeof(msg));
+  msg.type = MSG_PING;
 
   printf("HEARTBEAT: Thread starting...\n");
   while(RUNNING)
@@ -244,14 +279,17 @@ void *heartbeat_thread(void *arg)
       if(client_fds[i] == 0)
         { continue; }
 
-      if(send(client_fds[i], buff, strlen(buff) + 1, MSG_NOSIGNAL) < 0)
+      memset(&msg, 0, sizeof(msg));
+      msg.type = MSG_PING;
+      if(send(client_fds[i], &msg, sizeof(msg), MSG_NOSIGNAL) < 0)
       {
-        printf("HEARTBEAT: Socket %d not responding.\n", client_fds[i]);
-        client_fds[i] = 0;
+        printf("======= RIP %ld =======\n", client_fds[i]);
+        printf("---------------------------\n");
+        client_fds[i] = client_busy[i] = 0;
         continue;
       }
     }
-    sleep(5);
+    sleep(3);
   }
   printf("HEARTBEAT: Thread stopping...\n");
   return NULL;
@@ -262,8 +300,54 @@ void *heartbeat_thread(void *arg)
  */
 void *input_thread(void *arg)
 {
+  message msg;
+  char path[1 << 8];
+  int fp;
+
+  memset(&msg, 0, sizeof(message));
+  msg.type = MSG_REQUEST;
+
   while(RUNNING)
-    {}
+  {
+    scanf("%s", path);
+
+    fp = open(path, O_RDONLY);
+    if(fp < 0)
+      { printf("Unable to open: %s\n", path); continue; }
+
+    if(read(fp, msg.buff, sizeof(msg.buff)) < 0)
+      { printf("Error while reading %s\n", path); continue; }
+
+    msg.num = requests_sent++;
+
+    int cli_idx, cli_fd;
+    cli_idx = -1;
+
+    for(int i=0; i<MAX_CLIENTS; i++)
+    {
+      if(client_fds[i] == 0)
+        { continue; }
+
+      cli_idx = i;
+      if(!client_busy[i])
+        { break; }
+    }
+
+    cli_fd = client_fds[cli_idx];
+    if(cli_idx == -1 || cli_fd == 0)
+      { printf("No availablie clients\n"); continue; }
+
+    if(send(cli_fd, &msg, sizeof(msg), MSG_NOSIGNAL) < 0)
+      { printf("Error sending request to FD %d\n", cli_fd); }
+    else
+    {
+      client_busy[cli_idx]++;
+      printf("======= REQUEST %ld =========\n", msg.num);
+      printf("WORKER: %d\n", cli_fd);
+      printf("-----------------------------\n");
+    }
+  }
+
   printf("Input thread stopping...\n");
   return NULL;
 }
@@ -290,7 +374,7 @@ int add_epoll(int epoll_fd, int fd)
   return 0;
 }
 
-int add_client_fd(int fd)
+int register_client(int fd, const char *hostname)
 {
   int i = 0;
   while(i < MAX_CLIENTS)
@@ -298,6 +382,8 @@ int add_client_fd(int fd)
     if(client_fds[i] == 0)
     {
       client_fds[i] = fd;
+      client_busy[i] = 0;
+      strcpy(client_hostname[i], hostname);
       return i;
     }
     i++;

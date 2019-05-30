@@ -19,6 +19,7 @@ clean:
 server: server.out
 	rm -f /tmp/xd
 	./server.out 2137 /tmp/xd
-
-client: client.out
+client1: client.out
 	./client.out wapiesz NET 2137
+client2: client.out
+	./client.out dorotka_ma_w_glowie_kotka NIX /tmp/xd
